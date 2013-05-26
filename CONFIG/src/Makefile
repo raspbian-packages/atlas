@@ -367,6 +367,13 @@ $(LIBINSTdir) :
 install : $(INCINSTdir) $(LIBINSTdir) $(INCINSTdir)/atlas
 	$(MAKE) -f Make.top install_inc INSTdir=$(INCINSTdir) 
 	$(MAKE) -f Make.top install_static_lib INSTdir=$(LIBINSTdir)
+install_headers : $(INCINSTdir) $(INCINSTdir)/atlas
+	$(MAKE) -f Make.top install_inc INSTdir=$(INCINSTdir) 
+install_static : $(LIBINSTdir) $(LIBINSTdir)/atlas
+	$(MAKE) -f Make.top install_static_lib INSTdir=$(LIBINSTdir) 
+install_shared : $(LIBINSTdir) $(LIBINSTdir)/atlas
+	$(MAKE) -f Make.top install_shared_lib INSTdir=$(LIBINSTdir) 
+
 
 confclean:
 	rm -f *core* *.o config?.out
