@@ -72,6 +72,14 @@ enum MACHTYPE {MACHOther, IbmPwr3, IbmPwr4, IbmPwr5, PPCG4, PPCG5,
 #define MachIsALPHA(mach_) \
   ( 0 )
 #endif
+#ifdef __ARMEL__
+#define MachIsARMEL(mach_) \
+  ( __ARMEL__ )
+#else
+#define MachIsARMEL(mach_) \
+  ( 0 )
+#endif
+
 
 
 static char *f2c_namestr[5] = {"UNKNOWN","Add_", "Add__", "NoChange", "UpCase"};
