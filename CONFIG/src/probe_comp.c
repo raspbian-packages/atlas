@@ -518,6 +518,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
    if (MachIsMIPS(arch))
 	return(sp);
 //      return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
+   if (MachIsSH(arch))
+     return(sp);
    if (!CompIsGcc(comp))
    {
 /*
