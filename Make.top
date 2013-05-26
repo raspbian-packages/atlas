@@ -115,6 +115,7 @@ startup : lib include/
 	$(MAKE) -f Make.top leafstart leaf=src/blas/reference/level1
 	$(MAKE) -f Make.top leafstart leaf=src/auxil
 	$(MAKE) -f Make.top leafstart leaf=src/testing
+	$(MAKE) -f Make.top leafstart leaf=lib/atlas
 	$(MAKE) -f Make.top leafstart leaf=lib
 	$(MAKE) -f Make.top leafstart leaf=bin
 	cd src/blas/gemm ; mkdir KERNEL
@@ -271,6 +272,7 @@ killgrd :
 
 lib :
 	mkdir lib
+	mkdir lib/atlas
 
 include/:
 	mkdir include
