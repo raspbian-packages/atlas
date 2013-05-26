@@ -15,6 +15,11 @@ leafstart:
 build:
 	cd bin/ ; $(MAKE) xatlas_build
 	cd bin/ ; ./xatlas_build $(INSTFLAGS)
+	cd lib/ ; $(MAKE) atlas/libblas.a
+	cd lib/ ; $(MAKE) atlas/liblapack.a
+	cd lib/ ; $(MAKE) shared
+	cd lib/ ; $(MAKE) fullshared
+
 time: 
 	./xatlbench -dc $(BLDdir)/bin/INSTALL_LOG -dp $(BLDdir)/ARCHS/$(ARCH)
 C_sanity_test:
@@ -290,12 +295,16 @@ install_inc:
 	chmod 0644 $(INSTdir)/cblas.h $(INSTdir)/clapack.h
 	cp $(INCAdir)/* $(INSTdir)/atlas/.
 	- chmod 0644 $(INSTdir)/atlas/*
-install_lib:
+
+install_static_lib:
 	cp $(LIBdir)/libatlas.a $(INSTdir)/.
 	cp $(LIBdir)/libcblas.a $(INSTdir)/.
 	cp $(LIBdir)/liblapack_atlas.a $(INSTdir)/.
+	cp $(LIBdir)/atlas/libblas.a $(INSTdir)/atlas/.
+	cp $(LIBdir)/atlas/liblapack.a $(INSTdir)/atlas/.
 	chmod 0644 $(INSTdir)/libatlas.a  $(INSTdir)/liblapack_atlas.a \
-                   $(INSTdir)/libcblas.a 
+                   $(INSTdir)/libcblas.a $(INSTdir)/atlas/libblas.a \
+		   $(INSTdir)/atlas/liblapack.a 
 	- cp $(LIBdir)/libf77blas.a $(INSTdir)/.
 	- chmod 0644 $(INSTdir)/libf77blas.a
 	- cp $(LIBdir)/libptcblas.a $(INSTdir)/.
