@@ -311,3 +311,12 @@ install_static_lib:
 	- cp $(LIBdir)/libptf77blas.a $(INSTdir)/.
 	- chmod 0644 $(INSTdir)/libptcblas.a $(INSTdir)/libptf77blas.a
 
+install_shared_lib:
+	for lib in atlas cblas f77blas lapack_atlas; do \
+		cp $(LIBdir)/lib$$lib.so $(INSTdir)/. ; \
+		chmod 0644 $(INSTdir)/lib$$lib.so ;\
+	done;
+	for lib in blas lapack; do \
+		cp $(LIBdir)/atlas/lib$$lib.so $(INSTdir)/atlas/. ; \
+		chmod 0644 $(INSTdir)/atlas/lib$$lib.so ;\
+	done;
