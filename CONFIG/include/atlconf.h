@@ -51,6 +51,14 @@ enum MACHTYPE {MACHOther, IbmPwr3, IbmPwr4, IbmPwr5, PPCG4, PPCG5,
 #endif
 #define MachIsPPC(mach_) \
    ( (mach_) >= PPCG4 && (mach_) <= PPCG5 )
+#ifdef __s390__
+#define MachIsS390(mach_) \
+  ( __s390__ )
+#else
+#define MachIsS390(mach_) \
+   ( 0 )
+#endif
+
 
 static char *f2c_namestr[5] = {"UNKNOWN","Add_", "Add__", "NoChange", "UpCase"};
 static char *f2c_intstr[5] =
