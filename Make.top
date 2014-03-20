@@ -10,7 +10,7 @@ error_report:
 	mv error_$(ARCH).tar.gz error_$(ARCH).tgz
 
 leafstart:
-	cd $(leaf) ; ln -s $(BLDdir)/Make.inc Make.inc
+	cd $(leaf) ; if test -h Make.inc; then rm Make.inc; fi; ln -s $(BLDdir)/Make.inc Make.inc
 
 build:
 	cd bin/ ; $(MAKE) xatlas_build

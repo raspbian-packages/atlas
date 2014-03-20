@@ -300,26 +300,26 @@ xprobe_x8684 : $(SRCdir)/backend/probe_this_asm.c $(SRCdir)/backend/probe_gas_x8
 DoNothing:
 
 make_subdirs:
-	mkdir src bin tune interfaces
-	cd src ; mkdir testing auxil blas lapack pthreads
+	mkdir src bin tune interfaces >/dev/null 2>&1
+	cd src ; mkdir testing auxil blas lapack pthreads>/dev/null 2>&1
 	cd src/blas ; \
-           mkdir reference gemv ger gemm level1 level2 level3 pklevel3
-	cd src/blas/reference ; mkdir level1 level2 level3
-	cd src/blas/level2 ; mkdir kernel
-	cd src/blas/pklevel3 ; mkdir gpmm sprk
-	cd src/blas/level3 ; mkdir rblas kernel
-	cd src/pthreads ; mkdir blas misc
+           mkdir reference gemv ger gemm level1 level2 level3 pklevel3>/dev/null 2>&1
+	cd src/blas/reference ; mkdir level1 level2 level3>/dev/null 2>&1
+	cd src/blas/level2 ; mkdir kernel>/dev/null 2>&1
+	cd src/blas/pklevel3 ; mkdir gpmm sprk>/dev/null 2>&1
+	cd src/blas/level3 ; mkdir rblas kernel>/dev/null 2>&1
+	cd src/pthreads ; mkdir blas misc>/dev/null 2>&1
 	cd src/pthreads/blas ; mkdir level1 level2 level3
-	cd tune ; mkdir blas sysinfo
-	cd tune/blas ; mkdir gemm gemv ger level1 level3
-	cd interfaces ; mkdir blas lapack
-	cd interfaces/lapack ; mkdir C F77
-	cd interfaces/lapack/C ; mkdir src testing
-	cd interfaces/lapack/F77 ; mkdir src testing
-	cd interfaces/blas ; mkdir C F77
-	cd interfaces/blas/C ; mkdir src testing
-	cd interfaces/blas/F77 ; mkdir src testing
-	mkdir ARCHS
+	cd tune ; mkdir blas sysinfo>/dev/null 2>&1
+	cd tune/blas ; mkdir gemm gemv ger level1 level3>/dev/null 2>&1
+	cd interfaces ; mkdir blas lapack>/dev/null 2>&1
+	cd interfaces/lapack ; mkdir C F77>/dev/null 2>&1
+	cd interfaces/lapack/C ; mkdir src testing>/dev/null 2>&1
+	cd interfaces/lapack/F77 ; mkdir src testing>/dev/null 2>&1
+	cd interfaces/blas ; mkdir C F77>/dev/null 2>&1
+	cd interfaces/blas/C ; mkdir src testing>/dev/null 2>&1
+	cd interfaces/blas/F77 ; mkdir src testing>/dev/null 2>&1
+	mkdir ARCHS>/dev/null 2>&1
 
 #
 # Simple test returns error if directory doesn't exist
