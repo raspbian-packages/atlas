@@ -289,6 +289,7 @@ include/:
 	touch include/dXover.h
 	touch include/sXover.h
 
+# XXX: we should use install tool here instead of those hacks
 install_inc:
 	cp $(INCSdir)/cblas.h $(INSTdir)/.
 	cp $(INCSdir)/clapack.h $(INSTdir)/.
@@ -313,10 +314,18 @@ install_static_lib:
 
 install_shared_lib:
 	for lib in atlas cblas f77blas lapack_atlas; do \
-		cp $(LIBdir)/lib$$lib.so $(INSTdir)/. ; \
+		cp $(LIBdir)/lib$$lib.so.3.0 $(INSTdir)/. ; \
+		( cd $(INSTdir) && ln -s lib$$lib.so.3.0 lib$$lib.so.3); \
+		( cd $(INSTdir) && ln -s lib$$lib.so.3 lib$$lib.so); \
 		chmod 0644 $(INSTdir)/lib$$lib.so ;\
+		chmod 0644 $(INSTdir)/lib$$lib.so.3 ;\
+		chmod 0644 $(INSTdir)/lib$$lib.so.3.0 ;\
 	done;
 	for lib in blas lapack; do \
-		cp $(LIBdir)/atlas/lib$$lib.so $(INSTdir)/atlas/. ; \
+		cp $(LIBdir)/atlas/lib$$lib.so.3.0 $(INSTdir)/atlas/. ; \
+		( cd $(INSTdir)/atlas/ && ln -s lib$$lib.so.3.0 lib$$lib.so.3); \
+		( cd $(INSTdir)/atlas/ && ln -s lib$$lib.so.3 lib$$lib.so); \
 		chmod 0644 $(INSTdir)/atlas/lib$$lib.so ;\
+		chmod 0644 $(INSTdir)/atlas/lib$$lib.so.3 ;\
+		chmod 0644 $(INSTdir)/atlas/lib$$lib.so.3.0 ;\
 	done;
