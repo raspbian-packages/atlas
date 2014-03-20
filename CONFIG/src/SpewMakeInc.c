@@ -536,7 +536,7 @@ main(int nargs, char **args)
       fprintf(fpout, "   PTCBLASlib = $(LIBdir)/libptcblas.a\n");
       fprintf(fpout, "   PTF77BLASlib = $(LIBdir)/libptf77blas.a\n");
    }
-   fprintf(fpout, "   LAPACKlib = $(LIBdir)/liblapack.a\n");
+   fprintf(fpout, "   LAPACKlib = $(LIBdir)/liblapack_atlas.a\n");
    fprintf(fpout, "   TESTlib = $(LIBdir)/libtstatlas.a\n\n");
 
    fprintf(fpout, "#  -------------------------------------------\n");
