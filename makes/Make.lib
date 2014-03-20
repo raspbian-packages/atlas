@@ -82,6 +82,15 @@ atlas/liblapack.a: liblapack_atlas.a libatlas.a
 	ar r $@ tmp/*.o
 	rm -rf tmp
 
+atlas/libblas.so: atlas/libblas.a libatlas.so
+	ld $(LDFLAGS) -shared -soname libblas.so -o $@ \
+	   --whole-archive atlas/libblas.a \
+           --no-whole-archive $(F77SYSLIB) -lm -lc
+
+atlas/liblapack.so: atlas/liblapack.a atlas/libblas.so
+	ld $(LDFLAGS) -shared -soname liblapack.so -o $@ \
+	   --whole-archive atlas/liblapack.a \
+           --no-whole-archive -L . -lblas $(F77SYSLIB) -lm -lc
 #
 # Builds one shared lib from all ATLAS files
 #
