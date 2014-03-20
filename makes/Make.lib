@@ -64,6 +64,24 @@ libptcblas.so : libptcblas.a
 	ld $(LDFLAGS) -shared -soname $@ -o $@ --whole-archive libptcblas.a
 libcblas.so : libcblas.a
 	ld $(LDFLAGS) -shared -soname $@ -o $@ --whole-archive libcblas.a
+
+# Build full netlib blas/lapack libraries:
+atlas/libblas.a: libatlas.a libptf77blas.a libptcblas.a
+	mkdir tmp
+	(cd tmp && ar x ../libatlas.a);
+	(cd tmp && ar x ../libptf77blas.a);
+	(cd tmp && ar x ../libptcblas.a);
+	ar r $@ tmp/*.o
+	rm -rf tmp
+
+atlas/liblapack.a: liblapack_atlas.a libatlas.a
+	mkdir tmp
+	(cd tmp && ar x /usr/lib/liblapack_pic.a);
+	(cd tmp && ar x ../liblapack_atlas.a);
+	(cd tmp && ar x ../libptcblas.a);
+	ar r $@ tmp/*.o
+	rm -rf tmp
+
 #
 # Builds one shared lib from all ATLAS files
 #
