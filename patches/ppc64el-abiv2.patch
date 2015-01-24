@@ -1,0 +1,105 @@
+Origin: http://sourceforge.net/p/math-atlas/patches/65/#3cb1
+Forwarded: http://sourceforge.net/p/math-atlas/patches/65/
+Description: ELFv2 ABI changes for ppc64el
+ For more details, see:
+ https://bugzilla.redhat.com/show_bug.cgi?id=1080073#c40
+Last-Update: 2014-10-24
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=766695
+Reviewed-By: Sébastien Villemot <sebastien@debian.org>
+--- a/tune/blas/gemm/CASES/ATL_dmm4x4x32_ppc.c
++++ b/tune/blas/gemm/CASES/ATL_dmm4x4x32_ppc.c
+@@ -268,7 +268,7 @@ Mjoin(.,ATL_USERMM):
+ 	.globl  Mjoin(_,ATL_USERMM)
+ Mjoin(_,ATL_USERMM):
+    #else
+-      #if defined(ATL_USE64BITS)
++      #if defined(ATL_USE64BITS) && _CALL_ELF != 2
+ /*
+  *      Official Program Descripter section, seg fault w/o it on Linux/PPC64
+  */
+@@ -324,8 +324,15 @@ ATL_USERMM:
+ #endif
+ 
+ #ifdef ATL_USE64BITS
++#if _CALL_ELF == 2
++/* ABIv2 */
++        ld      pC0, 104(r1)
++        ld      incCn, 112(r1)
++#else
++/* ABIv1 */
+         ld      pC0, 120(r1)
+         ld      incCn, 128(r1)
++#endif
+ #elif defined(ATL_AS_OSX_PPC) || defined(ATL_AS_AIX_PPC)
+         lwz     pC0, 68(r1)
+         lwz     incCn,  72(r1)
+--- a/tune/blas/gemm/CASES/ATL_dmm4x4x80_ppc.c
++++ b/tune/blas/gemm/CASES/ATL_dmm4x4x80_ppc.c
+@@ -170,13 +170,21 @@ void ATL_USERMM(const int M, const int N
+                 const TYPE beta, TYPE *C, const int ldc)
+                                   (r10)    8(r1)
+ *******************************************************************************
+-64 bit ABIs:
++64 bit ABIv1s:
+                          r3           r4           r5             r6/f1
+ void ATL_USERMM(const int M, const int N, const int K, const TYPE alpha,
+                            r7             r8             r9            r10
+                 const TYPE *A, const int lda, const TYPE *B, const int ldb,
+                              f2   120(r1)        128(r1)
+                 const TYPE beta, TYPE *C, const int ldc)
++
++64 bit ABIv2s:
++                         r3           r4           r5             r6/f1
++void ATL_USERMM(const int M, const int N, const int K, const TYPE alpha,
++                           r7             r8             r9            r10
++                const TYPE *A, const int lda, const TYPE *B, const int ldb,
++                             f2   104(r1)        112(r1)
++                const TYPE beta, TYPE *C, const int ldc)
+ #endif
+ #ifdef ATL_AS_AIX_PPC
+         .csect .text[PR]
+@@ -202,7 +210,7 @@ Mjoin(.,ATL_USERMM):
+ 	.globl  Mjoin(_,ATL_USERMM)
+ Mjoin(_,ATL_USERMM):
+    #else
+-      #if defined(ATL_USE64BITS)
++      #if defined(ATL_USE64BITS) && _CALL_ELF != 2
+ /*
+  *      Official Program Descripter section, seg fault w/o it on Linux/PPC64
+  */
+@@ -257,9 +265,17 @@ ATL_USERMM:
+    #endif
+ #endif
+ 
++
+ #if defined (ATL_USE64BITS)
++#if _CALL_ELF == 2
++/* ABIv2 */
++        ld      pC0, 104(r1)
++        ld      incCn, 112(r1)
++#else
++/* ABIv1 */
+         ld      pC0, 120(r1)
+         ld      incCn, 128(r1)
++#endif
+ #elif defined(ATL_AS_OSX_PPC) || defined(ATL_AS_AIX_PPC)
+         lwz     pC0, 68(r1)
+         lwz     incCn,  72(r1)
+--- a/tune/blas/gemm/CASES/ATL_dmm4x4x2pf_av.c
++++ b/tune/blas/gemm/CASES/ATL_dmm4x4x2pf_av.c
+@@ -405,8 +405,15 @@ Mjoin(_,ATL_USERMM):
+  */
+ #ifdef ATL_GAS_LINUX_PPC
+    #ifdef ATL_USE64BITS
++      #if _CALL_ELF == 2
++      /* ABIv2 */
++        ld      pC0, 104(r1)
++        ld      incCn, 112(r1)
++      #else
++      /* ABIv1 */
+ 	ld 	pC0, 120(r1)
+ 	ld 	incCn, 128(r1)
++      #endif
+    #else
+ 	lwz	incCn, FSIZE+8(r1)
+    #endif

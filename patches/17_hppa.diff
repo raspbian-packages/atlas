@@ -1,0 +1,39 @@
+--- a/CONFIG/include/atlconf.h
++++ b/CONFIG/include/atlconf.h
+@@ -63,7 +63,13 @@ enum MACHTYPE {MACHOther, IbmPwr3, IbmPw
+    ( (mach_) == ARMv7 )
+ #define MachIsS390(mach_) \
+    ( (mach_) >= IbmZ9 && (mach_) <= IbmZ196 )
+-
++#ifdef __hppa__
++#define MachIsHPPA(mach_) \
++   ( __hppa__ )
++#else
++#define MachIsHPPA(mach_) \
++   ( 0 )
++#endif
+ 
+ static char *f2c_namestr[5] = {"UNKNOWN","Add_", "Add__", "NoChange", "UpCase"};
+ static char *f2c_intstr[5] =
+--- a/CONFIG/src/SpewMakeInc.c
++++ b/CONFIG/src/SpewMakeInc.c
+@@ -391,6 +391,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enu
+ 
+    if (MachIsIA64(arch))
+       return(sp);
++   if (MachIsHPPA(arch))
++     return(sp);
+    if (MachIsMIPS(arch))
+       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
+    if (MachIsS390(arch))
+--- a/CONFIG/src/probe_comp.c
++++ b/CONFIG/src/probe_comp.c
+@@ -584,6 +584,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enu
+ 
+    if (MachIsIA64(arch))
+       return(sp);
++   if (MachIsHPPA(arch))
++     return(sp);
+    if (MachIsMIPS(arch))
+       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
+    if (MachIsS390(arch))

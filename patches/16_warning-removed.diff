@@ -1,0 +1,13 @@
+Index: ATLAS/Make.top
+===================================================================
+--- ATLAS.orig/Make.top	2013-01-09 17:42:11.000000000 +0100
++++ ATLAS/Make.top	2013-01-09 17:42:11.000000000 +0100
+@@ -9,7 +9,7 @@
+ 	$(BZIP) error_$(ARCH).tar
+ 
+ leafstart:
+-	cd $(leaf) ; ln -s $(BLDdir)/Make.inc Make.inc
++	cd $(leaf) ; if test -h Make.inc; then rm Make.inc; fi; ln -s $(BLDdir)/Make.inc Make.inc
+ 
+ build:
+ 	cd bin/ ; $(MAKE) xatlas_build
