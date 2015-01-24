@@ -18,7 +18,7 @@ enum OSTYPE {OSOther=0, OSLinux, OSSunOS, OSSunOS4, OSOSF1, OSIRIX, OSAIX,
 enum ARCHFAM {AFOther=0, AFPPC, AFSPARC, AFALPHA, AFX86, AFIA64, AFMIPS,
               AFARM, AFS390};
 
-#define NMACH 52
+#define NMACH 53
 static char *machnam[NMACH] =
    {"UNKNOWN", "POWER3", "POWER4", "POWER5", "PPCG4", "PPCG5",
     "POWER6", "POWER7", "POWERe6500", "IBMz9", "IBMz10", "IBMz196",
@@ -29,7 +29,7 @@ static char *machnam[NMACH] =
     "Efficeon", "K7", "HAMMER", "AMD64K10h", "AMDLLANO", "AMDDOZER","AMDDRIVER",
     "UNKNOWNx86", "IA64Itan", "IA64Itan2",
     "USI", "USII", "USIII", "USIV", "UST1", "UST2", "UnknownUS",
-    "MIPSR1xK", "MIPSICE9", "ARMv7"};
+    "MIPSR1xK", "MIPSICE9", "ARMv7", "GENERIC"};
 enum MACHTYPE {MACHOther, IbmPwr3, IbmPwr4, IbmPwr5, PPCG4, PPCG5,
                IbmPwr6, IbmPwr7, Pwre6500,
                IbmZ9, IbmZ10, IbmZ196,  /* s390(x) in Linux */
@@ -42,7 +42,8 @@ enum MACHTYPE {MACHOther, IbmPwr3, IbmPwr4, IbmPwr5, PPCG4, PPCG5,
                SunUSI, SunUSII, SunUSIII, SunUSIV, SunUST1, SunUST2, SunUSX,
                MIPSR1xK, /* includes R10K, R12K, R14K, R16K */
                MIPSICE9,  /* SiCortex ICE9 -- like MIPS5K */
-               ARMv7      /* includes Cortex A8, A9 */
+               ARMv7,      /* includes Cortex A8, A9 */
+               GENERIC
                };
 #define MachIsX86(mach_) \
    ( (mach_) >= x86x87 && (mach_) <= x86X )
