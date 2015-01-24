@@ -778,8 +778,10 @@ int main(int nargs, char **args)
             fprintf(fpout, " -melf_i386");
          else if (ptrbits == 64)
             fprintf(fpout, " -melf_x86_64");
-         if (OS == OSFreeBSD)
-            fprintf(fpout, "_fbsd");
+ #ifdef __FreeBSD_kernel__
+          fprintf(fpout, "_fbsd");
+#endif
+
       }
    }
    fprintf(fpout, "\n   F77SYSLIB = %s\n", f77lib ? f77lib : "");
