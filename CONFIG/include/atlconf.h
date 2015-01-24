@@ -63,7 +63,13 @@ enum MACHTYPE {MACHOther, IbmPwr3, IbmPwr4, IbmPwr5, PPCG4, PPCG5,
    ( (mach_) == ARMv7 )
 #define MachIsS390(mach_) \
    ( (mach_) >= IbmZ9 && (mach_) <= IbmZ196 )
-
+#ifdef __hppa__
+#define MachIsHPPA(mach_) \
+   ( __hppa__ )
+#else
+#define MachIsHPPA(mach_) \
+   ( 0 )
+#endif
 
 static char *f2c_namestr[5] = {"UNKNOWN","Add_", "Add__", "NoChange", "UpCase"};
 static char *f2c_intstr[5] =
