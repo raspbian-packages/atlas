@@ -550,6 +550,10 @@ int main(int nargs, char **args)
    fprintf(fpout, "#  -------------------------------------------------\n");
    fprintf(fpout, "   ARCH = %s", machnam[mach]);
    fprintf(fpout, "%d", ptrbits);
+   /* for ppc64le archi add 'LE' characters */
+   #if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+      fprintf(fpout, "%s", "LE");
+   #endif
    if (ISAX)
       fprintf(fpout, "%s", ISAXNAM[ISAX]);
    if (!USEIEEE)
