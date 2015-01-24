@@ -399,6 +399,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
      return(sp);
    if (MachIsMIPS(arch))
        return(sp);
+   if (MachIsSH(arch))
+       return(sp);
    if (MachIsS390(arch))
       return(sp);
    if (!CompIsGcc(comp))
