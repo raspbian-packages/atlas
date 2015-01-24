@@ -28,6 +28,10 @@
  *
  */
 
+#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+/* FIXME: port to little-endian powerpc64. */
+#else
+
 #include "atlas_asm.h"
 /*
  * NOTE: this kernel written by R. Clint Whaley, but it uses two key ideas
@@ -7502,3 +7506,5 @@ DONE:
         addi    r1, r1, FSIZE
 #endif
         blr
+
+#endif  /* little-endian powerpc64 */
