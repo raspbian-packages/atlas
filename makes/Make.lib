@@ -175,6 +175,36 @@ TRYALL :
            LIBS="$(LIBS)" LIBINSTdir="$(LIBINSTdir)" ; \
         fi
 
+
+# Build full netlib blas/lapack libraries:
+atlas/libblas.a: libatlas.a
+	mkdir tmp
+	cd tmp && \
+		ar x ../libatlas.a && \
+		if test -f ../libptf77blas.a -a -f ../libptcblas.a; then \
+			ar x ../libptf77blas.a && \
+			ar x ../libptcblas.a; \
+		else \
+			ar x ../libf77blas.a && \
+			ar x ../libcblas.a; \
+		fi
+	ar r $@ tmp/*.o
+	rm -rf tmp
+
+atlas/liblapack.a: liblapack_atlas.a libatlas.a
+	mkdir tmp
+	cd tmp && \
+		ar x /usr/lib/liblapack_pic.a && \
+		ar x ../liblapack_atlas.a && \
+		if test -f ../libptcblas.a; then \
+			ar x ../libptcblas.a; \
+		else \
+			ar x ../libcblas.a; \
+		fi
+	ar r $@ tmp/*.o
+	rm -rf tmp
+
+
 #
 # Builds one shared lib from all ATLAS files
 #

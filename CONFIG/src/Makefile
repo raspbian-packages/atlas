@@ -575,7 +575,7 @@ $(LIBINSTdir) :
 	chmod 0755 $(LIBINSTdir)
 install : $(INCINSTdir) $(LIBINSTdir) $(INCINSTdir)/atlas
 	$(MAKE) -f Make.top install_inc INSTdir=$(INCINSTdir) 
-	$(MAKE) -f Make.top install_lib INSTdir=$(LIBINSTdir)
+	$(MAKE) -f Make.top install_static_lib INSTdir=$(LIBINSTdir)
 
 confclean: $(CLEANdep)
 	rm -f *core* *.o config?.out
