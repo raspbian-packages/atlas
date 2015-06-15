@@ -1,0 +1,22 @@
+Note that subdirectories correspond to DEB_HOST_ARCH_CPU. Therefore, amd64 is
+used for kfreebsd-amd64, i386 for kfreebsd-i386 and hurd-i386, and arm for
+armel and armhf.
+
+Here is how some information on where and how the various archdefs were
+generated (other details are in README.source):
+
+- amd64: ATLAS 3.10.1 / karaba.cepremap.org / wheezy / 2013-06-04
+- arm:
+  + GENERIC32.tar.bz2 (for armel): ATLAS 3.10.1 / vamana.villemot.name (Raspberry Pi) / sid / 2013-07-01
+  + ARMv732 (for armhf): from ATLAS 3.10.1 tarball, modified for removing all
+    the "-mfloat-abi=armhf" and "-mfpu=vfpv3" flags
+  + ARMv732NEON (for armhf): same than ARMv732; note that this one is not used
+    for the generic package, but only for the custom one
+- arm64: ATLAS 3.10.2 / asachi.debian.org / sid / 2014-10-25
+- i386: from ATLAS 3.10.1 tarball
+- mips: ATLAS 3.10.1 / gabrielli.debian.org / sid / 2013-07-27
+- mipsel: ATLAS 3.10.1 / eder.debian.org / sid / 2013-06-07
+- powerpc: ATLAS 3.10.1 / partch.debian.org / sid / 2013-06-06
+- ppc64el: ATLAS 3.10.2 / pastel.debian.net / sid / 2014-10-24
+- s390x: ATLAS 3.10.1 / zelenka.debian.org / sid / 2013-06-06
+- sparc: ATLAS 3.10.1 / smetana.debian.org / wheezy / 2013-06-06

@@ -1,0 +1,6 @@
+debian/tmp/usr/lib/atlas-base/*.so
+debian/tmp/usr/lib/atlas-base/*.a
+debian/tmp/usr/lib/atlas-base/atlas/*.so
+debian/tmp/usr/lib/atlas-base/atlas/*.a
+debian/blas-atlas.pc /usr/lib/pkgconfig
+debian/lapack-atlas.pc /usr/lib/pkgconfig

@@ -1,0 +1,46 @@
+Recreating upstream tarball
+===========================
+
+atlas*.tar.gz is modified from upstream.
+
+*.pdf are removed from the tarball and the TexDoc directory from the CVS
+AtlasBase module is included.
+
+
+Tuning of the library
+=====================
+
+The ATLAS build system, before creating the binaries, first performs a very
+long series of timing tests in order to tune the library to the precise CPU on
+which it is built.
+
+However, this process sometimes fails because reliable timings cannot be
+obtained. In that case, the build log will contain the following near the end:
+"VARIATION EXCEEDS TOLERANCE, RERUN WITH HIGHER REPS". The solution is simply
+to run the build again [1].
+
+This situation is not convenient for build daemons, because it means that for
+every new source package, it is necessary to ask for several give backs before
+getting the package compiled on all arches.
+
+In order to overcome this problem, the generic ATLAS package uses pre-computed
+timings (called architectural defaults in the ATLAS jargon). These are located
+under debian/archdefs/$(DEB_HOST_ARCH_CPU). The name of the tarballs
+corresponds to the architecture detected by ATLAS (variable ARCH in
+build/atlas-base/Make.inc).
+
+The procedure for creating these architectural defaults on a given platform is
+the following:
+
+ debuild -us -uc -B    (will be very long, because timings will be computed)
+ cd build/atlas-base/ARCHS
+ make ArchNew          (will create an $(ATLAS_ARCH) subdirectory)
+ tar caf $(ATLAS_ARCH).tar.bz2 $(ATLAS_ARCH)
+ mkdir -p ../../../debian/archdefs/$(DEB_HOST_ARCH_CPU)/
+ mv $(ATLAS_ARCH).tar.bz2 ../../../debian/archdefs/$(DEB_HOST_ARCH_CPU)/
+ echo debian/archdefs/$(DEB_HOST_ARCH_CPU)/$(ATLAS_ARCH).tar.bz2 >> ../../../debian/source/include-binaries
+
+[1] http://math-atlas.sourceforge.net/errata.html#tol
+
+ -- Sébastien Villemot <sebastien@debian.org>, Sat, 25 Oct 2014 19:12:20 +0200
+

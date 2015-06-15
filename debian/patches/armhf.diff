@@ -1,0 +1,28 @@
+Description: Do not use soft-float ABI on armhf
+ See http://math-atlas.sourceforge.net/errata.html#armhardfp.
+ Also remove -mfpu=vfpv3 flag, because some armhf machines have only vfpv3-d16
+ (i.e. 16 FPU registers instead of 32).
+Author: Sébastien Villemot <sebastien@debian.org>
+Last-Update: 2013-06-09
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/CONFIG/src/atlcomp.txt
++++ b/CONFIG/src/atlcomp.txt
+@@ -259,13 +259,13 @@ MACH=P4,PM OS=WinNT,Win64 LVL=0 COMPS=ic
+ # ARM defaults
+ #
+ MACH=ARMv7 OS=ALL LVL=1000 COMPS=xcc
+-   'gcc' '-mcpu=cortex-a8 -O1 -mfpu=vfpv3 -mfloat-abi=softfp '
++   'gcc' '-mcpu=cortex-a8 -O1 '
+ MACH=ARMv7 OS=ALL LVL=1000 COMPS=smc,skc,gcc,icc
+-   'gcc' '-O1 -mcpu=cortex-a8 -mtune=cortex-a8 -mfpu=vfpv3 -mfloat-abi=softfp -fno-expensive-optimizations'
++   'gcc' '-O1 -mcpu=cortex-a8 -mtune=cortex-a8 -fno-expensive-optimizations'
+ MACH=ARMv7 OS=ALL LVL=1000 COMPS=dmc,dkc
+-   'gcc' '-O1 -mcpu=cortex-a8 -mtune=cortex-a8 -mfpu=vfpv3 -mfloat-abi=softfp -fno-schedule-insns2'
++   'gcc' '-O1 -mcpu=cortex-a8 -mtune=cortex-a8 -fno-schedule-insns2'
+ MACH=ARMv7 OS=ALL LVL=1000 COMPS=f77
+-   'gfortran' '-mcpu=cortex-a8 -mfpu=vfpv3 -mfloat-abi=softfp -O'
++   'gfortran' '-mcpu=cortex-a8 -O'
+ #
+ # Generic defaults
+ #
