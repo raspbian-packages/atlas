@@ -928,10 +928,8 @@ void PrintUsage(char *name, int iarg, char *arg)
         "      -Si nocygwin <0/1> : Do/don't depend on GPL cygwin library\n");
       fprintf(stderr,
         "                           (Windows compiler/cygwin install only)\n");
-/* Disabled due to abuse
       fprintf(stderr,
         "      -Si cputhrchk <0/1> : Ignore/heed CPU throttle probe\n");
- */
       fprintf(stderr,
            "   -tl <#> <list> : set # of threads, use list of affinity IDs\n");
       fprintf(stderr,
@@ -1129,6 +1127,8 @@ void GetFlags(int nargs,                /* nargs as passed into main */
             *NoF77 = k;
          else if (!strcmp(sp0, "nocygwin"))
             *NoCygwin = k;
+         else if (!strcmp(sp0, "cputhrchk"))
+            *ThrChk = k;
          else if (!strcmp(sp0, "kern"))
             gcc3 = sp;
          else if (!strcmp(sp0, "ADdir") || !strcmp(sp0, "addir"))
