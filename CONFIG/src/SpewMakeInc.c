@@ -394,7 +394,7 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
    if (MachIsMIPS(arch))
       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
    if (MachIsS390(arch))
-      return((ptrbits == 64) ? "-m64" : "-m31");
+      return(sp);
    if (!CompIsGcc(comp))
    {
 /*
@@ -774,8 +774,6 @@ int main(int nargs, char **args)
             fprintf(fpout, "_fbsd");
       }
    }
-   if (MachIsS390(mach))
-      fprintf(fpout, ptrbits == 32 ? "-m31" : "-m64");
    fprintf(fpout, "\n   F77SYSLIB = %s\n", f77lib ? f77lib : "");
    fprintf(fpout, "   BC = $(KC)\n");
    fprintf(fpout, "   NCFLAGS = $(KCFLAGS)\n");

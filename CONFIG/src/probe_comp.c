@@ -587,7 +587,7 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
    if (MachIsMIPS(arch))
       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
    if (MachIsS390(arch))
-      return((ptrbits == 64) ? "-m64" : "-m31");
+      return(sp);
    if (!CompIsGcc(comp))
    {
 /*
