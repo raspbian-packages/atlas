@@ -595,7 +595,7 @@ int main(int nargs, char **args)
    fprintf(fpout, "   ATLASlib = $(LIBdir)/libatlas.a\n");
    fprintf(fpout, "   CBLASlib = $(LIBdir)/libcblas.a\n");
    fprintf(fpout, "   F77BLASlib = $(LIBdir)/libf77blas.a\n");
-   fprintf(fpout, "   LAPACKlib = $(LIBdir)/liblapack.a\n");
+   fprintf(fpout, "   LAPACKlib = $(LIBdir)/liblapack_atlas.a\n");
    if (THREADS)
    {
       fprintf(fpout, "   PTCBLASlib = $(LIBdir)/libptcblas.a\n");
