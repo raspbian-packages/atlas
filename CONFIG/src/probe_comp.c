@@ -588,6 +588,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
      return(sp);
    if (MachIsALPHA(arch))
      return(sp);
+   if (MachIsARMEL(arch))
+     return(sp);
    if (MachIsMIPS(arch))
       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
    if (MachIsS390(arch))
