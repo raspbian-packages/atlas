@@ -268,7 +268,7 @@ Mjoin(.,ATL_USERMM):
 	.globl  Mjoin(_,ATL_USERMM)
 Mjoin(_,ATL_USERMM):
    #else
-      #if defined(ATL_USE64BITS)
+      #if defined(ATL_USE64BITS) && _CALL_ELF != 2
 /*
  *      Official Program Descripter section, seg fault w/o it on Linux/PPC64
  */
@@ -324,8 +324,15 @@ ATL_USERMM:
 #endif
 
 #ifdef ATL_USE64BITS
+#if _CALL_ELF == 2
+/* ABIv2 */
+        ld      pC0, 104(r1)
+        ld      incCn, 112(r1)
+#else
+/* ABIv1 */
         ld      pC0, 120(r1)
         ld      incCn, 128(r1)
+#endif
 #elif defined(ATL_AS_OSX_PPC) || defined(ATL_AS_AIX_PPC)
         lwz     pC0, 68(r1)
         lwz     incCn,  72(r1)
