@@ -1,0 +1,21 @@
+Origin: https://bugzilla.redhat.com/show_bug.cgi?id=1080073#c43
+Forwarded: http://sourceforge.net/p/math-atlas/patches/66/
+Description: Append 'LE' to archdef on little-endian PowerPC64
+ For more details, see:
+ https://bugzilla.redhat.com/show_bug.cgi?id=1080073#c40
+Last-Update: 2014-10-24
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=766695
+Reviewed-By: Sébastien Villemot <sebastien@debian.org>
+--- a/CONFIG/src/SpewMakeInc.c
++++ b/CONFIG/src/SpewMakeInc.c
+@@ -550,6 +550,10 @@ int main(int nargs, char **args)
+    fprintf(fpout, "#  -------------------------------------------------\n");
+    fprintf(fpout, "   ARCH = %s", machnam[mach]);
+    fprintf(fpout, "%d", ptrbits);
++   /* for ppc64le archi add 'LE' characters */
++   #if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++      fprintf(fpout, "%s", "LE");
++   #endif
+    if (ISAX)
+       fprintf(fpout, "%s", ISAXNAM[ISAX]);
+    if (!USEIEEE)
