@@ -101,15 +101,15 @@
 #elif defined(ATL_GAS_PPC) && !defined(ATL_ARCH_POWER4)
    #if defined(__GNUC__) || defined(__IBM_GCC_ASM)
       #define ATL_pfl1R(mem) \
-         __asm__ __volatile__ ("dcbt  0, %0, 0" : : "r" ((mem)))
+         __asm__ __volatile__ ("dcbt  0, %0" : : "r" ((mem)))
       #define ATL_pfl1W(mem) \
          __asm__ __volatile__ ("dcbtst  0, %0" : : "r" ((mem)))
       #define ATL_pfST(mem) \
-         __asm__ __volatile__ ("dcbt  0, %0, 1" : : "r" ((mem)))
+         __asm__ __volatile__ ("dcbt  0, %0" : : "r" ((mem)))
       #define ATL_pfl1STi(mem, str) \
         __asm__ __volatile__ ("rlwinm %0, %0, 0, 0, 24\n\t" \
                               "ori %0, %0, 96+%2\n\t" \
-                              "dcbt 0, %0, 8"  \
+                              "dcbt 0, %0"  \
                               : "=r" (mem) \
                               : "0" (mem), "i" (str))
 
