@@ -602,7 +602,7 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
    if (MachIsARMEL(arch))
      return(sp);
    if (MachIsMIPS(arch))
-      return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
+       return(sp);
    if (MachIsS390(arch))
       return(sp);
    if (OS == OSAIX)
