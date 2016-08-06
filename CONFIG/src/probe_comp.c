@@ -607,6 +607,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
       return(sp);
    if (OS == OSAIX)
       return((ptrbits == 64) ? "-maix64" : "-maix32");
+   if (MachIsSH(arch))
+      return(sp);
 
    if (!CompIsGcc(comp))
    {
