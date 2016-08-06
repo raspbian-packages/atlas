@@ -1,0 +1,191 @@
+#!/usr/bin/make -f
+# Copyright 2008-2010 Sylvestre Ledru <sylvestre@debian.org>
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+# NB: the following strings and numbers come from xprint_enums (compilable from the build
+# directory with "make xprint_enums); they can change across releases
+#
+# The trailing number in ARCHS corresponds to the instruction set (ISA):
+# - 1 means no instruction set extension
+# - 768 means SSE1+SSE2 (always available on amd64)
+ifeq ($(DEB_HOST_ARCH),s390x)
+ARCHS=base_IBMz9_1
+else ifeq ($(DEB_HOST_ARCH_CPU),ppc64el)
+ARCHS=base_POWER8_1
+else ifeq ($(DEB_HOST_ARCH_CPU),i386)
+# See http://math-atlas.sourceforge.net/atlas_install/node32.html
+ARCHS=base_x86x87_1
+else ifeq ($(DEB_HOST_ARCH_CPU),amd64)
+ARCHS=base_x86SSE2_768
+else ifeq ($(DEB_HOST_ARCH),armhf)
+ARCHS=base_ARMa7_1
+else
+# The same as 0 (UNKNOWN), except that it does not try autodetection
+# See debian/patches/generic.diff
+ARCHS=base_GENERIC_1
+endif
+
+# Pointer bitwidth
+MODE_BITWIDTH = $(shell dpkg-architecture -qDEB_HOST_ARCH_BITS)
+
+DEB_SHLIBDEPS_INCLUDE_libatlas3-base := $(CURDIR)/debian/libatlas3-base/usr/lib/atlas-base/:$(CURDIR)/debian/libatlas3-base/usr/lib/atlas-base/atlas/
+
+DEB_DH_GENCONTROL_ARGS_ALL := -- -VBuilt-Using="`dpkg-query -W -f='$${source:Package} (= $${source:Version})' liblapack-pic`"
+
+GFORTRAN_LIB_PATH=`$(CC) -print-search-dirs|grep ^install:|awk '{print $$2}'`
+
+# Flags common to both the generic and custom packages
+COMMON_CONFIG_PARAMS := --prefix="$(DEB_DESTDIR)" 	\
+	--incdir="$(DEB_DESTDIR)/usr/include/"			\
+	--libdir="$(DEB_DESTDIR)/usr/lib/$$targetName"		\
+	--cc="${CC}" 									\
+	--cflags="${CFLAGS}" 							\
+	-D c -DWALL 									\
+	-b $(MODE_BITWIDTH) 							\
+	-Fa alg '-fPIC' 				\
+	-Ss f77lib "-L$(GFORTRAN_LIB_PATH) -lgfortran -lgcc_s -lpthread"  \
+	-Ss pmake '$(MAKE)'					\
+	-Ss flapack /usr/lib/liblapack_pic.a 	\
+	-A $$atlasArch									\
+	-V $$atlasISA 									\
+	-v 2
+
+# Flags used only for the generic package
+# The cripple-atlas-performance flag is needed for disabling the CPU throttling
+#  check, because on some buildds CPU throttling is enabled and we have no way
+#  of disabling it.
+GENERIC_CONFIG_PARAMS := \
+	-t 0 \
+	-Ss ADdir ../../../debian/archdefs/$(DEB_HOST_ARCH_CPU) \
+	--cripple-atlas-performance
+
+# Build a custom package optimized for the current arch
+custom: custom-stamp
+.PHONY: custom
+custom-stamp:
+		rm -f configure-stamp
+
+		ncpu=$$(LANG=C cpufreq-info | grep "analyzing CPU" -c);\
+		cpu=0;\
+		while test $$cpu -lt $$ncpu ; do\
+		if test $$(cpufreq-info -p 2>&1 > /dev/null; echo $$?) \
+			-eq 0 -a -z "$$(LANG=C cpufreq-info -p -c $$cpu | grep performance)" ; then \
+			echo "frequency governor on cpu=$$cpu is not set to 'performance'"; \
+			echo "run: 'sudo cpufreq-set -g performance -c cpu#' for each cpu"; \
+			echo "aborting atlas build"; \
+			exit 1; \
+		fi; \
+		cpu=$$((cpu+1)) ;\
+		done
+
+		# Here, the trick is pretty simple:
+		# * We don't want to build all the optimized version of Atlas. Just the
+		#   one for the current CPU
+		# * We override ARCHS by base__
+		# * Base is the name of the package (libatlas3-base)
+		# * __ is provided to have the right expression
+		# * the regexp will consider that atlasArch and atlasISA are empty
+		#   therefor, leaving the choice of the optimization to Atlas
+		# * After that, we fall back to the normal build procedure by calling
+		#   debian/rules itself (yep, recursively)
+
+		# Remove all the other archs in this case
+		dch --local='+custom'  "custom build on: `uname -a`"
+		LANG=C debian/rules ARCHS=base__ binary
+		touch $@
+
+common-configure-arch common-configure-indep:: configure-stamp
+configure-stamp:
+		dh_testdir
+
+		set -e;											\
+		targetName=`echo $(ARCHS)|sed -e "s|\(.*\)_.*_.*|atlas-\1|g"`; \
+		atlasArch=`echo $(ARCHS)|sed -e "s|.*_\(.*\)_.*|\1|g"`; \
+		atlasISA=`echo $(ARCHS)|sed -e "s|.*_.*_\(.*\)|\1|g"`; \
+		mkdir -p build/$$targetName;					\
+		cd build/$$targetName; 							\
+		if test "$(ARCHS)" != "base__"; then 		\
+		../../configure $(COMMON_CONFIG_PARAMS) $(GENERIC_CONFIG_PARAMS); \
+		else						\
+		../../configure $(COMMON_CONFIG_PARAMS);	\
+		fi;						\
+		echo "Configure done. targetName = $$targetName / atlasArch = $$atlasArch / atlasISA = $$atlasISA";								\
+		if test ! -s Make.inc; then echo "Configure failed: Make.inc not found"; exit 1; fi;											\
+		cat Make.inc |grep ARCH|head -1|awk '{print $$3}'; \
+		echo "=============================================="; \
+		cd -
+		touch $@
+
+debian/blas-atlas.pc: debian/blas-atlas.pc.in
+	sed -e "s%@DEB_UPSTREAM_VERSION@%$(DEB_UPSTREAM_VERSION)%" < $< > $@
+
+debian/lapack-atlas.pc: debian/lapack-atlas.pc.in
+	sed -e "s%@DEB_UPSTREAM_VERSION@%$(DEB_UPSTREAM_VERSION)%" < $< > $@
+
+common-build-arch common-build-indep:: build-stamp
+build-stamp: debian/blas-atlas.pc debian/lapack-atlas.pc
+		dh_testdir
+		set -e; 												\
+		targetName=`echo $(ARCHS)|sed -e "s|\(.*\)_.*_.*|atlas-\1|g"`; \
+		cd build/$$targetName;									\
+		$(MAKE) build;											\
+		$(MAKE) check;											\
+		test -f build/$$targetName/lib/libptcblas.a && $(MAKE) ptcheck;										\
+		echo "==============================================";	\
+		cd ../../../
+		# Do not build the help when building the custom package
+		if test "$(ARCHS)" != "base__"; then \
+			make -C TexDoc atlas_contrib.pdf atlas_devel.pdf atlas_install.pdf cblasqref.pdf  f77blasqref.pdf lapackqref.pdf; \
+		fi
+		touch $@
+
+clean:: clean-work
+clean-work:
+		dh_testdir
+		dh_testroot
+		rm -rf build check
+		rm -f debian/blas-atlas.pc debian/lapack-atlas.pc
+		rm -f configure-stamp build-stamp
+		rm -f TexDoc/*.pdf
+		[ ! -f Makefile ] || $(MAKE) distclean
+.PHONY: clean-work
+
+common-install-arch common-install-indep::
+		dh_testdir
+		dh_testroot
+
+		set -e;													\
+		targetName=`echo $(ARCHS)|sed -e "s|\(.*\)_.*_.*|atlas-\1|g"`; \
+		cd build/$$targetName;									\
+		echo "make install of $$targetName to $(DEB_DESTDIR)";	\
+		$(MAKE) DESTDIR=$(DEB_DESTDIR) install;					\
+		echo "=============================================";	\
+		cd -
+
+install/libatlas-dev::
+	if test -d $(CURDIR)/debian/libatlas-dev/usr/include/; then \
+		rm -rf $(CURDIR)/debian/libatlas-dev/usr/include/;  \
+	fi
+	mkdir -p $(CURDIR)/debian/libatlas-dev/usr/include/
+	mv $(CURDIR)/debian/tmp/usr/include/*.h $(CURDIR)/debian/tmp/usr/include/atlas/
+	mv $(CURDIR)/debian/tmp/usr/include/atlas $(CURDIR)/debian/libatlas-dev/usr/include/
+
+install/libatlas-doc::
+	if test "$(ARCHS)" != "base__"; then \
+		mkdir -p $(CURDIR)/debian/libatlas-doc/usr/share/doc/libatlas-doc/; \
+		cp -R $(CURDIR)/doc/* $(CURDIR)/TexDoc/*.pdf $(CURDIR)/debian/libatlas-doc/usr/share/doc/libatlas-doc/; \
+		rm $(CURDIR)/debian/libatlas-doc/usr/share/doc/libatlas-doc/ChangeLog; \
+	fi
+
+# We want packages using libblas/liblapack to depend on any BLAS/LAPACK
+# alternative, and we want packages depending on ATLAS-specific libraries
+# (e.g. libatlas.so) to depend specifically on libatlas3-base.
+#
+# Such a setting is not supported by dh_makeshlibs, so we ship a hand-crafted
+# shlibs file.
+binary-predeb/libatlas3-base::
+	cp debian/libatlas3-base.shlibs debian/libatlas3-base/DEBIAN/shlibs
+
+get-orig-source:
+	-uscan --upstream-version 0
