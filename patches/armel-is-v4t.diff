@@ -1,0 +1,20 @@
+Description: On armel, do not use asm constructs provided by ATLAS
+ Since 3.10, ATLAS incorporates asm constructs for ARM processors. However,
+ these are too recent for the Debian armel port (which is ARMv4t). This patch
+ ensures that these asm constructs are not used on that port.
+Author: Sébastien Villemot <sebastien@debian.org>
+Forwarded: no
+Last-Update: 2013-06-07
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/CONFIG/src/backend/probe_gas_arm.S
++++ b/CONFIG/src/backend/probe_gas_arm.S
+@@ -1,5 +1,8 @@
+ #define ATL_GAS_ARM
+ #include "atlas_asm.h"
++#ifdef __ARM_ARCH_4T__
++#error "Debian armel is only v4t, but ATLAS needs a more recent ISA"
++#endif
+ #
+ # Linux ARM assembler for:
+ # int asm_probe(int i)

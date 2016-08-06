@@ -1,0 +1,39 @@
+--- a/CONFIG/include/atlconf.h
++++ b/CONFIG/include/atlconf.h
+@@ -97,6 +97,14 @@ enum MACHTYPE {MACHOther, PPCG4, PPCG5,
+ #define MachIsALPHA(mach_) \
+   ( 0 )
+ #endif
++#ifdef __ARMEL__
++#define MachIsARMEL(mach_) \
++  ( __ARMEL__ )
++#else
++#define MachIsARMEL(mach_) \
++  ( 0 )
++#endif
++
+ 
+ static char *f2c_namestr[5] = {"UNKNOWN","Add_", "Add__", "NoChange", "UpCase"};
+ static char *f2c_intstr[5] =
+--- a/CONFIG/src/SpewMakeInc.c
++++ b/CONFIG/src/SpewMakeInc.c
+@@ -405,6 +405,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enu
+      return(sp);
+    if (MachIsALPHA(arch))
+      return(sp);
++   if (MachIsARMEL(arch))
++     return(sp);
+    if (MachIsMIPS(arch))
+       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
+    if (MachIsS390(arch))
+--- a/CONFIG/src/probe_comp.c
++++ b/CONFIG/src/probe_comp.c
+@@ -599,6 +599,8 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enu
+      return(sp);
+    if (MachIsALPHA(arch))
+      return(sp);
++   if (MachIsARMEL(arch))
++     return(sp);
+    if (MachIsMIPS(arch))
+       return((ptrbits == 64) ? "-mabi=64" : "-mabi=n32");
+    if (MachIsS390(arch))
