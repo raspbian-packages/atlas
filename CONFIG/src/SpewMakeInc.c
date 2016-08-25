@@ -624,6 +624,9 @@ int main(int nargs, char **args)
    }
    fprintf(fpout, "   TESTlib = $(LIBdir)/libtstatlas.a\n\n");
 
+   fprintf(fpout, "   FULLBLASlib = $(LIBdir)/atlas/libblas.a\n");
+   fprintf(fpout, "   FULLLAPACKlib = $(LIBdir)/atlas/liblapack.a\n");
+
    fprintf(fpout, "#  -------------------------------------------\n");
    fprintf(fpout, "#  Upper bound on largest cache size, in bytes\n");
    fprintf(fpout, "#  -------------------------------------------\n");
