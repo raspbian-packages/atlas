@@ -16,6 +16,7 @@ build:
 	cd bin/ ; ./xatlas_build $(INSTFLAGS)
 	cd lib/ ; $(MAKE) atlas/libblas.a
 	cd lib/ ; $(MAKE) atlas/liblapack.a
+	cd lib/ ; $(MAKE) fullshared
 
 time: 
 	./xatlbench -dc $(BLDdir)/bin/INSTALL_LOG -dp $(BLDdir)/ARCHS/$(ARCH)
@@ -683,3 +684,21 @@ install_static_lib:
 	- cp $(LIBdir)/libsatlas.so $(INSTdir)/.
 	- cp $(LIBdir)/libtatlas.so $(INSTdir)/.
 
+install_shared_lib:
+	for lib in atlas cblas f77blas lapack_atlas; do \
+		cp $(LIBdir)/lib$$lib.so.3.0 $(INSTdir)/. ; \
+		( cd $(INSTdir) && ln -s lib$$lib.so.3.0 lib$$lib.so.3); \
+		( cd $(INSTdir) && ln -s lib$$lib.so.3 lib$$lib.so); \
+		chmod 0644 $(INSTdir)/lib$$lib.so ;\
+		chmod 0644 $(INSTdir)/lib$$lib.so.3 ;\
+		chmod 0644 $(INSTdir)/lib$$lib.so.3.0 ;\
+	done;
+	mkdir -p $(INSTdir)/atlas
+	for lib in blas lapack; do \
+		cp $(LIBdir)/atlas/lib$$lib.so.3.0 $(INSTdir)/atlas/. ; \
+		( cd $(INSTdir)/atlas/ && ln -s lib$$lib.so.3.0 lib$$lib.so.3); \
+		( cd $(INSTdir)/atlas/ && ln -s lib$$lib.so.3 lib$$lib.so); \
+		chmod 0644 $(INSTdir)/atlas/lib$$lib.so ;\
+		chmod 0644 $(INSTdir)/atlas/lib$$lib.so.3 ;\
+		chmod 0644 $(INSTdir)/atlas/lib$$lib.so.3.0 ;\
+	done;
