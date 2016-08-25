@@ -25,7 +25,7 @@ enum ARCHFAM {AFOther=0, AFPPC, AFSPARC, AFALPHA, AFX86, AFIA64, AFMIPS,
  * Corei3EP: v3 Haswell, E5-26XX
  * Corei4: skylake
  */
-#define NMACH 62
+#define NMACH 63
 static char *machnam[NMACH] =
    {"UNKNOWN", "PPCG4", "PPCG5", "POWER3", "POWER4", "POWER5",
     "POWER6", "POWER7", "POWER8", "POWERe6500",
@@ -39,7 +39,7 @@ static char *machnam[NMACH] =
     "USI", "USII", "USIII", "USIV", "UST1", "UST2", "UnknownUS",
     "MIPSR1xK", "MIPSICE9",
     "ARMa7", "ARMa9", "ARMa15", "ARMa17",
-    "ARM64xgene1", "ARM64a53", "ARM64a57"};
+    "ARM64xgene1", "ARM64a53", "ARM64a57", "GENERIC"};
 enum MACHTYPE {MACHOther, PPCG4, PPCG5, IbmPwr3, IbmPwr4, IbmPwr5,
                IbmPwr6, IbmPwr7, IbmPwr8, Pwre6500,
                IbmZ9, IbmZ10, IbmZ196, IbmZ12, IbmZ13, /* s390(x) in Linux */
@@ -58,7 +58,8 @@ enum MACHTYPE {MACHOther, PPCG4, PPCG5, IbmPwr3, IbmPwr4, IbmPwr5,
                ARM17,     /* lots of tablets */
                ARM64xg,     /* includes ARMv8 */
                ARM64a53,
-               ARM64a57
+               ARM64a57,
+               GENERIC
                };
 #define MachIsX86(mach_) \
    ( (mach_) >= x86x87 && (mach_) <= x86X )
