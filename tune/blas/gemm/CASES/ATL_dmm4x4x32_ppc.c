@@ -436,7 +436,7 @@ MLOOP:
 	fmadd	rC00, rA0, rB0, rC00
         lfd     rb3, 8+KB3*8(pB0)
 	fmadd	rC10, rA1, rB0, rC10
-                dcbt    0, pfB, 0
+                dcbt    0, pfB
                 addi    pfB, pfB, 128
 	fmadd	rC20, rA2, rB0, rC20
 	fmadd	rC30, rA3, rB0, rC30
@@ -2565,7 +2565,7 @@ MLOOP:
 #if KB > 1
 	fmadd	rC00, ra0, rb0, rC00
 	fmadd	rC10, ra1, rb0, rC10
-               dcbt    0, pfA, 0
+               dcbt    0, pfA
                addi    pfA, pfA, 128
 	fmadd	rC20, ra2, rb0, rC20
 	fmadd	rC30, ra3, rb0, rC30
