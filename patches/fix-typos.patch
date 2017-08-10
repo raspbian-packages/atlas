@@ -1,0 +1,160 @@
+Description: Fix typos
+Author: Sébastien Villemot <sebastien@debian.org>
+Forwarded: no
+Last-Update: 2017-08-08
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/TexDoc/atlas_devel.tex
++++ b/TexDoc/atlas_devel.tex
+@@ -226,7 +226,7 @@ but all new codes should do so.
+           if (cond) statement;
+       \end{verbatim}
+ \item Comments are either to the left of a line if there is room, or on
+-      lines preceeding the commented code if not, using a style like:
++      lines preceding the commented code if not, using a style like:
+       \vspace*{-0.1in}
+       \begin{verbatim}
+ /*
+--- a/bin/stattime.c
++++ b/bin/stattime.c
+@@ -768,7 +768,7 @@ int GetFlags(int nargs, char **args, FIL
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+          case 's':
+--- a/results/atl2tvec.c
++++ b/results/atl2tvec.c
+@@ -787,7 +787,7 @@ int GetFlags  /* returns: DOWHAT (AVG,MI
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+          case 'c':
+--- a/results/cattvecs.c
++++ b/results/cattvecs.c
+@@ -39,7 +39,7 @@ char **GetFlags         /* RETURNS: arra
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case '#':    /* -# <# files> */
+--- a/results/mergetvecs.c
++++ b/results/mergetvecs.c
+@@ -41,7 +41,7 @@ char **GetFlags         /* RETURNS: arra
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'i':    /* -i[1,2] <file> */
+--- a/results/perctvecs.c
++++ b/results/perctvecs.c
+@@ -40,7 +40,7 @@ char **GetFlags         /* RETURNS: arra
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'i':    /* -i <file> */
+--- a/results/reducetvec.c
++++ b/results/reducetvec.c
+@@ -43,7 +43,7 @@ char **GetFlags         /* RETURNS: arra
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'i':    /* -i <file> */
+--- a/results/stattime.c
++++ b/results/stattime.c
+@@ -768,7 +768,7 @@ int GetFlags(int nargs, char **args, FIL
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+          case 's':
+--- a/results/tvec2plp.c
++++ b/results/tvec2plp.c
+@@ -31,7 +31,7 @@ char **GetFlags         /* RETURNS: arra
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "no '-' preceeding flag!", i);
++         PrintUsage(args[0], "no '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'i':    /* -i <file> */
+--- a/tune/blas/gemv/mvktime.c
++++ b/tune/blas/gemv/mvktime.c
+@@ -584,7 +584,7 @@ void GetFlags(int nargs, char **args, in
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "No '-' preceeding flag!", i);
++         PrintUsage(args[0], "No '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'f' :  /* set resfile output */
+--- a/tune/blas/ger/r1ktime.c
++++ b/tune/blas/ger/r1ktime.c
+@@ -553,7 +553,7 @@ void GetFlags(int nargs, char **args, in
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "No '-' preceeding flag!", i);
++         PrintUsage(args[0], "No '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'f' :  /* set resfile output */
+--- a/tune/blas/ger/r2ktime.c
++++ b/tune/blas/ger/r2ktime.c
+@@ -577,7 +577,7 @@ void GetFlags(int nargs, char **args, in
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], "No '-' preceeding flag!", i);
++         PrintUsage(args[0], "No '-' preceding flag!", i);
+       switch(args[i][1])
+       {
+       case 'f' :  /* set resfile output */
+--- a/tune/blas/ger/s1nxtune.c
++++ b/tune/blas/ger/s1nxtune.c
+@@ -299,7 +299,7 @@ int GetFlags(int nargs, char **args, enu
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], i, "No '-' preceeding flag!");
++         PrintUsage(args[0], i, "No '-' preceding flag!");
+       switch(args[i][1])
+       {
+       case 's' :
+--- a/tune/blas/ger/s2nxtune.c
++++ b/tune/blas/ger/s2nxtune.c
+@@ -300,7 +300,7 @@ int GetFlags(int nargs, char **args, enu
+    for (i=1; i < nargs; i++)
+    {
+       if (args[i][0] != '-')
+-         PrintUsage(args[0], i, "No '-' preceeding flag!");
++         PrintUsage(args[0], i, "No '-' preceding flag!");
+       switch(args[i][1])
+       {
+       case 's' :
