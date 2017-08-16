@@ -27,6 +27,10 @@
  *
  */
 
+#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+/* FIXME: port to little-endian powerpc64. */
+#else
+
 #include <altivec.h>
 #include "atlas_misc.h"
 #include "atlas_prefetch.h"               /* ATL_pfl1R, ATL_pfl1W */
@@ -326,3 +330,5 @@ void ATL_USERMM
         }
     }
 }
+
+#endif  /* little-endian powerpc64 */
