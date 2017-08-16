@@ -1,0 +1,17 @@
+Description: Add missing CFLAGS when building xmmgen_sse
+Author: Sébastien Villemot <sebastien@debian.org>
+Forwarded: no
+Last-Update: 2017-08-08
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/makes/Make.mmtune
++++ b/makes/Make.mmtune
+@@ -155,7 +155,7 @@ mmsearch.o : $(mySRCdir)/mmsearch.c $(pa
+ SSEGENOUTDIR :
+ 	mkdir SSEGENOUTDIR
+ xmmgen_sse : $(mySRCdir)/mmgen_sse.c
+-	$(XCC) -o $@ $(mySRCdir)/mmgen_sse.c -lm
++	$(XCC) $(XCCFLAGS) -o $@ $(mySRCdir)/mmgen_sse.c -lm
+ xmmksearch_sse : xmmgen_sse mmksearch_sse.o SSEGENOUTDIR
+ 	$(XCC) $(XCCFLAGS) -o $@ mmksearch_sse.o
+ mmksearch_sse.o : $(mySRCdir)/mmksearch_sse.c $(parsedeps)
