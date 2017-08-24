@@ -1,22 +1,26 @@
 Source: atlas
-Section: devel
-Priority: optional
 Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.org>
 Uploaders: Sébastien Villemot <sebastien@debian.org>
-Standards-Version: 3.9.8
-Build-Depends: debhelper (>= 9), patch, gfortran, cdbs,
- libblas-dev (>= 1.2.20110419-3),
- liblapack-dev (>= 3.4.1), liblapack-pic (>= 3.4.1), libblas-test,
- texlive-latex-base, ghostscript, cpufrequtils
-Homepage: http://math-atlas.sourceforge.net/
+Section: devel
+Priority: optional
+Build-Depends: debhelper (>= 10),
+               gfortran,
+               liblapack-pic,
+               texlive-latex-base,
+               ghostscript
+Standards-Version: 4.0.1
+Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/atlas.git
 Vcs-Git: https://anonscm.debian.org/git/debian-science/packages/atlas.git
-Vcs-Browser: https://anonscm.debian.org/git/debian-science/packages/atlas.git
+Homepage: http://math-atlas.sourceforge.net/
 
 Package: libatlas3-base
-Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libblas-common
-Provides: libblas.so.3, liblapack.so.3
+Section: libs
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         libblas-common
+Provides: libblas.so.3,
+          liblapack.so.3
 Built-Using: ${Built-Using}
 Description: Automatically Tuned Linear Algebra Software, generic shared
  ATLAS is an approach for the automatic generation and optimization of
@@ -33,12 +37,19 @@ Description: Automatically Tuned Linear Algebra Software, generic shared
  section: "Building Optimized Atlas Packages on your ARCH" in README.Debian
 
 Package: libatlas-base-dev
-Section: libdevel
 Architecture: any
-Depends: libatlas3-base (= ${binary:Version}), libatlas-dev, ${misc:Depends}, 
- ${shlibs:Depends}
-Provides: libblas.so, liblapack.so
-Suggests: libblas-doc, liblapack-doc
+Section: libdevel
+Depends: libatlas3-base (= ${binary:Version}),
+         libblas-dev,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Suggests: libatlas-doc,
+          liblapack-doc,
+          liblapack-dev
+Provides: libblas.so,
+          liblapack.so
+Breaks: libatlas-dev (<< 3.10.3-2)
+Replaces: libatlas-dev (<< 3.10.3-2)
 Built-Using: ${Built-Using}
 Description: Automatically Tuned Linear Algebra Software, generic static
  ATLAS is an approach for the automatic generation and optimization of
@@ -47,28 +58,13 @@ Description: Automatically Tuned Linear Algebra Software, generic static
  Subroutines (BLAS), and a subset of the linear algebra routines in the
  LAPACK library.
  .
- This package includes the static libraries and symbolic links
+ This package includes the headers, the static libraries and symbolic links
  needed for program development.
-
-Package: libatlas-dev
-Section: libdevel
-Architecture: any
-Depends: libc6-dev, libblas-dev, ${misc:Depends}
-Suggests: liblapack-dev, liblapack-doc
-Description: Automatically Tuned Linear Algebra Software, C header files
- ATLAS is an approach for the automatic generation and optimization of
- numerical software. Currently ATLAS supplies optimized versions for the
- complete set of linear algebra kernels known as the Basic Linear Algebra
- Subroutines (BLAS), and a subset of the linear algebra routines in the
- LAPACK library.
- .
- This package provides the headers needed to compile against the libraries
- provided by ATLAS.
 
 Package: libatlas-test
 Architecture: any
-Priority: extra
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
 Description: Automatically Tuned Linear Algebra Software, test programs
  ATLAS is an approach for the automatic generation and optimization of
  numerical software. Currently ATLAS supplies optimized versions for the
@@ -80,9 +76,10 @@ Description: Automatically Tuned Linear Algebra Software, test programs
  binaries to compare the BLAS and ATLAS libraries on your system.
 
 Package: libatlas-doc
+Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends}
-Architecture: all
 Description: Automatically Tuned Linear Algebra Software, documentation
  ATLAS is an approach for the automatic generation and optimization of
  numerical software. Currently ATLAS supplies optimized versions for the

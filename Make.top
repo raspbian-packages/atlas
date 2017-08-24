@@ -9,15 +9,11 @@ error_report:
 	$(BZIP) error_$(ARCH).tar
 
 leafstart:
-	cd $(leaf) ; if test -h Make.inc; then rm Make.inc; fi; ln -s $(BLDdir)/Make.inc Make.inc
+	cd $(leaf) ; ln -s $(BLDdir)/Make.inc Make.inc
 
 build:
 	cd bin/ ; $(MAKE) xatlas_build
 	cd bin/ ; ./xatlas_build $(INSTFLAGS)
-	cd lib/ ; $(MAKE) atlas/libblas.a
-	cd lib/ ; $(MAKE) atlas/liblapack.a
-	cd lib/ ; $(MAKE) fullshared
-
 time: 
 	./xatlbench -dc $(BLDdir)/bin/INSTALL_LOG -dp $(BLDdir)/ARCHS/$(ARCH)
 C_sanity_test:
@@ -405,7 +401,6 @@ startup : lib include results EXtest
 	$(MAKE) -f Make.top leafstart leaf=src/blas/reference/level1
 	$(MAKE) -f Make.top leafstart leaf=src/auxil
 	$(MAKE) -f Make.top leafstart leaf=src/testing
-	$(MAKE) -f Make.top leafstart leaf=lib/atlas
 	$(MAKE) -f Make.top leafstart leaf=lib
 	$(MAKE) -f Make.top leafstart leaf=bin
 	cd src/threads ; touch atomic.inc
@@ -596,7 +591,6 @@ killgrd :
 
 lib :
 	mkdir lib
-	mkdir lib/atlas
 
 include:
 	mkdir include
@@ -660,17 +654,12 @@ install_inc:
 	chmod 0644 $(INSTdir)/cblas.h $(INSTdir)/clapack.h
 	cp $(INCAdir)/* $(INSTdir)/atlas/.
 	- chmod 0644 $(INSTdir)/atlas/*
-
-install_static_lib:
+install_lib:
 	cp $(LIBdir)/libatlas.a $(INSTdir)/.
 	cp $(LIBdir)/libcblas.a $(INSTdir)/.
 	cp $(LIBdir)/liblapack_atlas.a $(INSTdir)/.
-	mkdir -p $(INSTdir)/atlas
-	cp $(LIBdir)/atlas/libblas.a $(INSTdir)/atlas/.
-	cp $(LIBdir)/atlas/liblapack.a $(INSTdir)/atlas/.
 	chmod 0644 $(INSTdir)/libatlas.a  $(INSTdir)/liblapack_atlas.a \
-                   $(INSTdir)/libcblas.a $(INSTdir)/atlas/libblas.a \
-		   $(INSTdir)/atlas/liblapack.a 
+                   $(INSTdir)/libcblas.a 
 	- cp $(LIBdir)/libf77blas.a $(INSTdir)/.
 	- chmod 0644 $(INSTdir)/libf77blas.a
 	- cp $(LIBdir)/libptcblas.a $(INSTdir)/.
@@ -684,21 +673,3 @@ install_static_lib:
 	- cp $(LIBdir)/libsatlas.so $(INSTdir)/.
 	- cp $(LIBdir)/libtatlas.so $(INSTdir)/.
 
-install_shared_lib:
-	for lib in atlas cblas f77blas lapack_atlas; do \
-		cp $(LIBdir)/lib$$lib.so.3.0 $(INSTdir)/. ; \
-		( cd $(INSTdir) && ln -s lib$$lib.so.3.0 lib$$lib.so.3); \
-		( cd $(INSTdir) && ln -s lib$$lib.so.3 lib$$lib.so); \
-		chmod 0644 $(INSTdir)/lib$$lib.so ;\
-		chmod 0644 $(INSTdir)/lib$$lib.so.3 ;\
-		chmod 0644 $(INSTdir)/lib$$lib.so.3.0 ;\
-	done;
-	mkdir -p $(INSTdir)/atlas
-	for lib in blas lapack; do \
-		cp $(LIBdir)/atlas/lib$$lib.so.3.0 $(INSTdir)/atlas/. ; \
-		( cd $(INSTdir)/atlas/ && ln -s lib$$lib.so.3.0 lib$$lib.so.3); \
-		( cd $(INSTdir)/atlas/ && ln -s lib$$lib.so.3 lib$$lib.so); \
-		chmod 0644 $(INSTdir)/atlas/lib$$lib.so ;\
-		chmod 0644 $(INSTdir)/atlas/lib$$lib.so.3 ;\
-		chmod 0644 $(INSTdir)/atlas/lib$$lib.so.3.0 ;\
-	done;

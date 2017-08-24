@@ -1,8 +1,0 @@
-usr/lib/atlas-base/libcblas.so        usr/lib/libcblas.so
-usr/lib/atlas-base/libcblas.a         usr/lib/libcblas.a
-usr/lib/atlas-base/libf77blas.so      usr/lib/libf77blas.so
-usr/lib/atlas-base/libf77blas.a       usr/lib/libf77blas.a
-usr/lib/atlas-base/libatlas.so        usr/lib/libatlas.so
-usr/lib/atlas-base/libatlas.a         usr/lib/libatlas.a
-usr/lib/atlas-base/liblapack_atlas.so usr/lib/liblapack_atlas.so
-usr/lib/atlas-base/liblapack_atlas.a  usr/lib/liblapack_atlas.a

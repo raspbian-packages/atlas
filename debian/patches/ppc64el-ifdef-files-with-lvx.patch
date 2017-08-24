@@ -12,11 +12,11 @@ Description: Skip optimizations for big-endian PowerPC.
  .
  For more details, see:
  https://bugzilla.redhat.com/show_bug.cgi?id=1080073#c40
-Author: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Bug-Debian: https://bugs.debian.org/766695
 Forwarded: http://sourceforge.net/p/math-atlas/patches/65/
+Author: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Reviewed-by: Sébastien Villemot <sebastien@debian.org>
 Last-Update: 2014-10-28
-Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=766695
-Reviewed-By: Sébastien Villemot <sebastien@debian.org>
 --- a/tune/blas/gemm/CASES/ATL_cmm4x4x128_av.c
 +++ b/tune/blas/gemm/CASES/ATL_cmm4x4x128_av.c
 @@ -7,6 +7,11 @@

@@ -595,20 +595,12 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
 
    if (MachIsIA64(arch))
       return(sp);
-   if (MachIsHPPA(arch))
-     return(sp);
-   if (MachIsALPHA(arch))
-     return(sp);
-   if (MachIsARMEL(arch))
-     return(sp);
    if (MachIsMIPS(arch))
        return(sp);
    if (MachIsS390(arch))
-      return(sp);
+      return((ptrbits == 64) ? "-m64" : "-m31");
    if (OS == OSAIX)
       return((ptrbits == 64) ? "-maix64" : "-maix32");
-   if (MachIsSH(arch))
-      return(sp);
 
    if (!CompIsGcc(comp))
    {

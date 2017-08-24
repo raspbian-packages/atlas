@@ -401,18 +401,10 @@ char *GetPtrbitsFlag(enum OSTYPE OS, enum MACHTYPE arch, int ptrbits,
 
    if (MachIsIA64(arch))
       return(sp);
-   if (MachIsHPPA(arch))
-     return(sp);
-   if (MachIsALPHA(arch))
-     return(sp);
-   if (MachIsARMEL(arch))
-     return(sp);
    if (MachIsMIPS(arch))
        return(sp);
-   if (MachIsSH(arch))
-       return(sp);
    if (MachIsS390(arch))
-      return(sp);
+      return((ptrbits == 64) ? "-m64" : "-m31");
    if (OS == OSAIX)
       return((ptrbits == 64) ? "-maix64" : "-maix32");
 
@@ -565,7 +557,7 @@ int main(int nargs, char **args)
    fprintf(fpout, "#  -------------------------------------------------\n");
    fprintf(fpout, "   ARCH = %s", machnam[mach]);
    fprintf(fpout, "%d", ptrbits);
-   #if defined(__powerpc64__) && defined(__ORDER_LITTLE_ENDIAN__)
+   #if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
       fprintf(fpout, "LE");
    #endif
    if (ISAX)
@@ -631,9 +623,6 @@ int main(int nargs, char **args)
       fprintf(fpout, "   PTLAPACKlib = $(LIBdir)/libptlapack.a\n");
    }
    fprintf(fpout, "   TESTlib = $(LIBdir)/libtstatlas.a\n\n");
-
-   fprintf(fpout, "   FULLBLASlib = $(LIBdir)/atlas/libblas.a\n");
-   fprintf(fpout, "   FULLLAPACKlib = $(LIBdir)/atlas/liblapack.a\n");
 
    fprintf(fpout, "#  -------------------------------------------\n");
    fprintf(fpout, "#  Upper bound on largest cache size, in bytes\n");
@@ -811,6 +800,8 @@ int main(int nargs, char **args)
 
       }
    }
+   if (MachIsS390(mach))
+      fprintf(fpout, ptrbits == 32 ? "-m31" : "-m64");
    fprintf(fpout, "\n   F77SYSLIB = %s\n", f77lib ? f77lib : "");
    fprintf(fpout, "   BC = $(KC)\n");
    fprintf(fpout, "   NCFLAGS = $(KCFLAGS)\n");

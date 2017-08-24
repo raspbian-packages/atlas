@@ -4,9 +4,10 @@ Description: Add a GENERIC machine type
  This is useful when trying to build a generic package on an arch for which
  ATLAS does not define a generic machine type. For example, on a armel buildd
  with ARMv7 CPU, ATLAS would detect ARMv7 if provided the UNKNOWN type.
+Bug-Debian: https://bugs.debian.org/719355
 Author: Sébastien Villemot <sebastien@debian.org>
-Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=719355
-Last-Update: 2014-07-12
+Forwarded: not-needed
+Last-Update: 2017-08-16
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/CONFIG/include/atlconf.h

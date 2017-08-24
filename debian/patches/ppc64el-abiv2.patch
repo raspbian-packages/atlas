@@ -1,11 +1,11 @@
-Origin: http://sourceforge.net/p/math-atlas/patches/65/#3cb1
-Forwarded: http://sourceforge.net/p/math-atlas/patches/65/
 Description: ELFv2 ABI changes for ppc64el
  For more details, see:
  https://bugzilla.redhat.com/show_bug.cgi?id=1080073#c40
+Bug-Debian: https://bugs.debian.org/766695
+Forwarded: http://sourceforge.net/p/math-atlas/patches/65/
+Origin: http://sourceforge.net/p/math-atlas/patches/65/#3cb1
+Reviewed-by: Sébastien Villemot <sebastien@debian.org>
 Last-Update: 2014-10-24
-Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=766695
-Reviewed-By: Sébastien Villemot <sebastien@debian.org>
 --- a/tune/blas/gemm/CASES/ATL_dmm4x4x32_ppc.c
 +++ b/tune/blas/gemm/CASES/ATL_dmm4x4x32_ppc.c
 @@ -268,7 +268,7 @@ Mjoin(.,ATL_USERMM):

@@ -768,7 +768,7 @@ int GetFlags(int nargs, char **args, FILE **fpA, FILE **fpB, FILE **fpout,
    for (i=1; i < nargs; i++)
    {
       if (args[i][0] != '-')
-         PrintUsage(args[0], "no '-' preceeding flag!", i);
+         PrintUsage(args[0], "no '-' preceding flag!", i);
       switch(args[i][1])
       {
          case 's':

@@ -1,12 +1,7 @@
 ATLAS for Debian
 ================
 
-Starting from Atlas 3.8.3-1, the whole build process has been rewritten.
-It is now using most of the debhelper tools and simplify the management of 
-other archs.
-
-
-Why optimized packages are no longer available?
+Why are optimized packages no longer available?
 -----------------------------------------------
 
 Before version 3.8.3-25, optimized binary packages were provided.  However, due
@@ -24,18 +19,15 @@ For more information about linear algebra libraries, see also:
 How to switch between BLAS/LAPACK implementations
 -------------------------------------------------
 
-Since Atlas 3.8.3-10, it is trivial to switch between the various BLAS/LAPACK
-implementations.
+It is trivial to switch between the various BLAS/LAPACK implementations.
 
-BLAS:
-update-alternatives --config libblas.so.3
+- BLAS:
 
-LAPACK:
-update-alternatives --config liblapack.so.3
+ $ sudo update-alternatives --config libblas.so.3
 
-Note that since Atlas 3.8.4-8, the ATLAS version of LAPACK is not selected by
-default (in order to minimize the incidence of bug #576972); you have to
-manually change the LAPACK alternative to use the optimized version.
+- LAPACK:
+
+ $ sudo update-alternatives --config liblapack.so.3
 
 More information is available here:
 
@@ -46,22 +38,65 @@ Building Optimized Atlas Packages on your ARCH
 ----------------------------------------------
 
 Building your own optimized packages of Atlas is straightforward.
-Just get the sources of the package and its build-dependencies:
 
-# apt-get source atlas
-# apt-get build-dep atlas
-# apt-get install devscripts
+1) Get the sources of the package and its build-dependencies:
 
-and type the following from the atlas source subdir:
+ $ apt-get source atlas
+ $ sudo apt-get build-dep atlas
 
-# fakeroot debian/rules custom
+2) Disable CPU throttling if it is enabled. Otherwise Atlas cannot get reliable
+timings and therefore the optimization will be suboptimal. This can easily be
+done using the tools from the cpufrequtils package.
 
-it should produce a package called:
+The state of your CPUs can be checked with:
 
- ../libatlas3-base_*.deb
+ $ cpufreq-info
 
-which is optimized for the architecture Atlas has been built on. Then install
-the package using "dpkg -i".
+If for any CPU, the governor is not set to "performance", then you can do so
+by issuing the following command for each of your CPU cores:
+
+ $ sudo cpufreq-set -g performance -c <cpu#>
+
+where <cpu#> is the CPU core number (the first has number zero).
+
+See INSTALL.txt from the libatlas-doc package for more details on this issue.
+
+3) Build the package by running the following:
+
+ $ cd atlas-<UPSTREAM_VERSION>
+ $ DEB_BUILD_OPTIONS=custom dpkg-buildpackage -uc -b
+
+where <UPSTREAM_VERSION> is replaced with the appropriate value.
+
+If the Atlas build system still complains about CPU throttling issues, despite
+having set the governors to performance, then you can force Atlas by
+uncommenting the following line in debian/rules:
+
+ CONFIGURE_FLAGS += --cripple-atlas-performance
+
+4) When the build finishes (it will take a long time), it should produce a .deb
+file, whose precise name you can figure out using:
+
+ $ ls ../libatlas3-base_*.deb
+
+Install it using:
+
+ $ sudo dpkg -i ../libatlas3-base_<VERSION>_<ARCH>.deb>
+
+replacing <VERSION> and <ARCH> with the appropriate values.
+
+5) If you don't want the Debian package manager to overwrite your optimized
+package with a generic one on system upgrades, you can mark the Atlas package
+to be on hold, with the following command:
+
+ $ sudo aptitude hold libatlas3-base
+
+Don't forget however to periodically check whether a more recent version of the
+package is available for the Debian suite that you are tracking, in which case
+you should go again through this procedure. The version check can be performed
+using:
+
+ $ aptitude versions libatlas3-base
 
 
 Misc
@@ -71,5 +106,5 @@ Thanks to David Cournapeau for providing all the patches for the shared
 libraries managements.
 
 
- -- Sébastien Villemot <sebastien@debian.org>, Fri,  7 Jun 2013 12:07:33 +0200
+ -- Sébastien Villemot <sebastien@debian.org>, Wed,  2 Aug 2017 14:38:47 +0200
  -- Sylvestre Ledru <sylvestre@debian.org>, Tue, 15 May 2012 18:05:34 +0200

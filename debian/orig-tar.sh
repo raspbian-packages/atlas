@@ -1,19 +1,16 @@
 #!/bin/sh -e
 
-# called by uscan with '--upstream-version' <version> <file>
+# called by uscan with '--upstream-version' <version>
 DIR=ATLAS
 DIRTARGET=atlas-$2
 TAR=../atlas_$2.orig.tar.bz2
 
-# clean up the upstream tarball
-tar jxvf $3
+# add TexDoc to tarball
+tar -xf $TAR
 mv $DIR $DIRTARGET
-# Before
-#  cvs -d:pserver:anonymous@math-atlas.cvs.sourceforge.net:/cvsroot/math-atlas login 
-cvs -z3 -d:pserver:anonymous@math-atlas.cvs.sourceforge.net:/cvsroot/math-atlas co -P AtlasBase/TexDoc
-mv AtlasBase/TexDoc/ $DIRTARGET
-rm -rf AtlasBase
-tar -j -c -f $TAR -X debian/orig-tar.exclude $DIRTARGET
+git clone https://github.com/math-atlas/math-atlas.git
+mv math-atlas/AtlasBase/TexDoc/ $DIRTARGET
+rm -rf math-atlas
+rm $TAR
+tar -caf $TAR -X debian/orig-tar.exclude $DIRTARGET
 rm -rf $DIRTARGET
-
-exit 0

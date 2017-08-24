@@ -27,13 +27,13 @@ In order to overcome this problem, the generic ATLAS package uses pre-computed
 timings (called architectural defaults in the ATLAS jargon). These are located
 under debian/archdefs/$(DEB_HOST_ARCH_CPU). The name of the tarballs
 corresponds to the architecture detected by ATLAS (variable ARCH in
-build/atlas-base/Make.inc).
+build/Make.inc).
 
 The procedure for creating these architectural defaults on a given platform is
 the following:
 
  debuild -us -uc -B    (will be very long, because timings will be computed)
- cd build/atlas-base/ARCHS
+ cd build/ARCHS
  make ArchNew          (will create an $(ATLAS_ARCH) subdirectory)
  tar caf $(ATLAS_ARCH).tar.bz2 $(ATLAS_ARCH)
  mkdir -p ../../../debian/archdefs/$(DEB_HOST_ARCH_CPU)/
@@ -42,5 +42,5 @@ the following:
 
 [1] http://math-atlas.sourceforge.net/errata.html#tol
 
- -- Sébastien Villemot <sebastien@debian.org>, Sat, 25 Oct 2014 19:12:20 +0200
+ -- Sébastien Villemot <sebastien@debian.org>, Tue,  1 Aug 2017 18:03:42 +0200
 

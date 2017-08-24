@@ -1,10 +1,15 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 02_rename_lapack_atlas.dpatch.dpatch by  <david@evans>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: Rename ATLAS incomplete lapack to lapack_atlas.
-
-@DPATCH@
+Description: Rename ATLAS incomplete liblapack.a to liblapack_atlas.a
+ The liblapack.a created by ATLAS build system is incomplete: it only contains
+ a small subset of the full LAPACK API (only those optimized by ATLAS).
+ Hence rename this library to liblapack_atlas.a to avoid a name conflict with
+ the full liblapack.a.
+ In particular, note that the "-Ss flapack" option of the configure script does
+ not work as expected as of ATLAS 3.10.3.
+Author: <david@evans>
+Forwarded: not-needed
+Last-Update: 2017-08-08
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/CONFIG/src/SpewMakeInc.c
 +++ b/CONFIG/src/SpewMakeInc.c
 @@ -615,7 +615,7 @@ int main(int nargs, char **args)

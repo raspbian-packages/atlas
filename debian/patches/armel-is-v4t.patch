@@ -3,8 +3,8 @@ Description: On armel, do not use asm constructs provided by ATLAS
  these are too recent for the Debian armel port (which is ARMv4t). This patch
  ensures that these asm constructs are not used on that port.
 Author: Sébastien Villemot <sebastien@debian.org>
-Forwarded: no
-Last-Update: 2013-06-07
+Bug: https://sourceforge.net/p/math-atlas/support-requests/1052/
+Last-Update: 2017-08-16
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/CONFIG/src/backend/probe_gas_arm.S

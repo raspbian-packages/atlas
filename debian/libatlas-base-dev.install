@@ -1,6 +1,12 @@
-debian/tmp/usr/lib/atlas-base/*.so
-debian/tmp/usr/lib/atlas-base/*.a
-debian/tmp/usr/lib/atlas-base/atlas/*.so
-debian/tmp/usr/lib/atlas-base/atlas/*.a
+usr/include/atlas/
+usr/lib/*.a
 debian/blas-atlas.pc /usr/lib/pkgconfig
 debian/lapack-atlas.pc /usr/lib/pkgconfig
+libblas.a          /usr/lib/atlas-base/atlas/
+libblas.so         /usr/lib/atlas-base/atlas/
+liblapack.a        /usr/lib/atlas-base/atlas/
+liblapack.so       /usr/lib/atlas-base/atlas/
+libatlas.so        /usr/lib/
+lib*cblas.so       /usr/lib/
+lib*f77blas.so     /usr/lib/
+liblapack_atlas.so /usr/lib/

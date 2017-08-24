@@ -3,7 +3,7 @@ libdir=${prefix}/lib/atlas-base/atlas
 includedir=${prefix}/include
 Name: atlas-blas
 Description: Automatically Tuned Linear Algebra Software, BLAS
-Version: @DEB_UPSTREAM_VERSION@
+Version: @DEB_VERSION_UPSTREAM@
 URL: http://math-atlas.sourceforge.net/
 Libs: -L${libdir} -lblas
 Libs.private: -L${libdir} -latlas -lm

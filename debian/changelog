@@ -1,4 +1,4 @@
-atlas (3.10.3-1+rpi1) stretch-staging; urgency=medium
+atlas (3.10.3-3+rpi1) buster-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,75 @@ atlas (3.10.3-1+rpi1) stretch-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Raspbian forward porter <root@raspbian.org>  Thu, 25 Aug 2016 08:30:34 +0000
+ -- Peter Michael Green <plugwash@raspbian.org>  Thu, 24 Aug 2017 16:04:25 +0000
+
+atlas (3.10.3-3) unstable; urgency=medium
+
+  * d/control: libatlas-base-dev now directly depends on libblas-dev.
+    This is necessary for having cblas.h under /usr/include (as was
+    the case before libatlas-dev was dropped).
+  * Add archdef for sparc64.
+  * d/control: mark libatlas-doc as M-A foreign.
+  * d/orig-tar.{sh,exclude}: fetch TexDoc subdir from git instead of CVS.
+
+ -- Sébastien Villemot <sebastien@debian.org>  Wed, 16 Aug 2017 22:30:36 +0200
+
+atlas (3.10.3-2) unstable; urgency=medium
+
+  * “The frantic post-release package overhaul”
+
+  [ Sébastien Villemot ]
+  * d/copyright: complete rewrite using machine-readable format 1.0.
+  * Merge libatlas-dev into libatlas-base-dev, drop the former.
+  * Drop useless patches:
+    + d/p/10_s390.diff
+    + d/p/17_hppa.diff
+    + d/p/18_alpha.diff
+    + d/p/20_armel.diff
+    + d/p/22_sh.diff
+    + d/p/16_warning-removed.diff
+  * d/p/ppc64-endianness.patch: new patch, fix machine detection on ppc64.
+  * d/p/fix-typos.patch: new patch.
+  * d/p/missing-cflags.patch: new patch.
+  * Drop patches for creating full BLAS and LAPACK libs, and shared libs.
+    Replace them by rules in debian/rules.
+    Also no longer embed lib(pt)?cblas.a into liblapack.a, not needed.
+  * d/rules:
+    + Rewrite and simplify using dh (drop cdbs).
+    + Support parallel=N in DEB_BUILD_OPTIONS.
+    + Support nodoc in DEB_BUILD_OPTIONS.
+    + Inject flags from dpkg-buildflags into the generic package.
+      Incidentally, this means that the noopt and nostrip flags of
+      DEB_BUILD_OPTIONS are now supported. (Closes: #697203)
+    + Do not use "-Ss flapack" option of configure, it does not work.
+  * d/watch:
+    + Bump to format version 4. Update d/orig-tar.sh to make it compatible with
+      the new invocation syntax.
+    + Add +ds suffix to orig tarball, since we're repacking it.
+  * d/control:
+    + Use canonical URL in Vcs-Browser.
+    + Drop Suggests on libblas-doc, superseded by liblapack-doc.
+    + Remove several unnecessary build-dependencies.
+    + Bump Standards-Version to 4.0.1.
+    + libatlas-test now marked priority optional, per Policy 4.0.1.
+  * Bump debhelper compat level to 10.
+  * Remove obsolete TODO.
+  * d/lapack-atlas.in: add Requires.private on blas.
+  * Custom package:
+    + Use DEB_BUILD_OPTIONS=custom as new interface.
+      By the way, no longer automatically append a changelog entry.
+      (Closes: #854781)
+    + Improve the instructions in README.Debian.
+    + Add -lpthread to dynamic libs and .pc file when relevant.
+    + Ship libpt{c,f77}blas.so when relevant. (Closes: #737834)
+  * armhf generic package: stop using Cortex-a7 machtype, enable VFPv3-D16.
+  * Add archdef for ppc64.
+
+  [ Dimitri John Ledkov ]
+  * d/rules: on Ubuntu s390x set ARCHS to z12.
+  * d/archdefs/s390x: add IBMz12 tarball
+
+ -- Sébastien Villemot <sebastien@debian.org>  Thu, 10 Aug 2017 18:39:08 +0200
 
 atlas (3.10.3-1) unstable; urgency=low
 
