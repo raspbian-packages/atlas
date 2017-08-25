@@ -199,19 +199,18 @@ ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
 	make -C TexDoc atlas_contrib.pdf atlas_devel.pdf atlas_install.pdf cblasqref.pdf f77blasqref.pdf lapackqref.pdf
 endif
 
-	#build some stuff manually that is needed for libatlas-test and
-	#seems to not get built if the testsuite fails
-	cd build/atlas-base/interfaces/blas/C/testing && $(MAKE)
-	cd build/atlas-base/interfaces/blas/F77/testing && $(MAKE)
-		
-
 override_dh_auto_test:
 	make -C build check || true
 	if test -f build/lib/libptcblas.a; then make -C build ptcheck; fi
 
 override_dh_auto_install:
+	#build some stuff manually that doesn't seem to get built if the testsuite fails
+	cd build/interfaces/blas/C/testing && $(MAKE)
+	cd build/interfaces/blas/F77/testing && $(MAKE)
+
 	make -C build install # The build system does not support setting DESTDIR at install time
 	mv debian/tmp/usr/include/*.h debian/tmp/usr/include/atlas/
+
 
 # We want packages using libblas/liblapack to depend on any BLAS/LAPACK
 # alternative, and we want packages depending on ATLAS-specific libraries
