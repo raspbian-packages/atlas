@@ -1,0 +1,10 @@
+Document: atlas-devel
+Title: A Collaborative guide to ATLAS Development
+Author: R. Clint Whaley and Peter Soendergaard
+Abstract: This paper exists to get you started if you want to do some ATLAS development.
+ The hope is that as new developers work on ATLAS, they will add to this note, so that
+ this information grows with time.
+Section: Programming
+
+Format: PDF
+Files: /usr/share/doc/libatlas-doc/atlas_devel.pdf.gz
