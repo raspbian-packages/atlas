@@ -1,6 +1,6 @@
 prefix=/usr
-libdir=${prefix}/lib/atlas-base/atlas
-includedir=${prefix}/include
+libdir=${prefix}/lib/@DEB_HOST_MULTIARCH@/atlas
+includedir=${prefix}/include/@DEB_HOST_MULTIARCH@
 Name: atlas-blas
 Description: Automatically Tuned Linear Algebra Software, BLAS
 Version: @DEB_VERSION_UPSTREAM@

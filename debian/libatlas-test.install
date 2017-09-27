@@ -1,9 +1,11 @@
-build/bin/*tst usr/lib/libatlas-test
-build/tune/blas/level1/x* usr/lib/libatlas-test
-build/tune/blas/gemv/x* usr/lib/libatlas-test
-build/tune/blas/gemm/x* usr/lib/libatlas-test
-build/tune/blas/ger/x* usr/lib/libatlas-test
-build/interfaces/blas/C/testing/x* usr/lib/libatlas-test
-build/interfaces/blas/F77/testing/x* usr/lib/libatlas-test
-interfaces/blas/C/testing/*.dat usr/lib/libatlas-test
-interfaces/blas/F77/testing/*.dat usr/lib/libatlas-test
+#!/usr/bin/dh-exec
+
+build/bin/*tst usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/level1/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/gemv/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/gemm/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/ger/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/interfaces/blas/C/testing/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/interfaces/blas/F77/testing/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+interfaces/blas/C/testing/*.dat usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+interfaces/blas/F77/testing/*.dat usr/lib/${DEB_HOST_MULTIARCH}/atlas/

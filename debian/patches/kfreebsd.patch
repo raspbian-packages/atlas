@@ -1,22 +1,35 @@
-Description: Fix linker flag on kfreebsd-* ports
- GNU/kFreeBSD is detected as Linux (see CONFIG/src/probe_OS.c), hence the test
- of the OS variable does not work.
+Description: Ensure that kfreebsd-* is detected as FreeBSD
+ The "GNU" test is moved at the end, otherwise kfreebsd is recognized as Linux.
+ This is necessary in order to have correct linker flags.
 Forwarded: https://sourceforge.net/p/math-atlas/patches/19/
-Last-Update: 2017-08-16
+Applied-Upstream: 3.10.4
+Last-Update: 2017-08-28
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
---- a/CONFIG/src/SpewMakeInc.c
-+++ b/CONFIG/src/SpewMakeInc.c
-@@ -794,8 +794,10 @@ int main(int nargs, char **args)
-             fprintf(fpout, " -melf_i386");
-          else if (ptrbits == 64)
-             fprintf(fpout, " -melf_x86_64");
--         if (OS == OSFreeBSD)
--            fprintf(fpout, "_fbsd");
-+ #ifdef __FreeBSD_kernel__
-+          fprintf(fpout, "_fbsd");
-+#endif
-+
+--- a/CONFIG/src/probe_OS.c
++++ b/CONFIG/src/probe_OS.c
+@@ -18,11 +18,7 @@ enum OSTYPE ProbeOS(int verb, char *targ
+    res = atlsys_1L(targ, cmnd, verb, 0);
+    if (res)
+    {
+-/*
+- *    Accept GNU (HURD) as Linux, since they seem to use same stuff;
+- *    This is patch from Sylvestre Ledru; I have no direct experience wt HURD
+- */
+-      if(strstr(res, "Linux") || strstr(res, "GNU")) OS = OSLinux;
++      if(strstr(res, "Linux")) OS = OSLinux;
+       else if(strstr(res, "FreeBSD")) OS = OSFreeBSD;
+       else if (strstr(res, "Darwin")) OS = OSOSX;
+       else if(strstr(res, "SunOS"))
+@@ -59,6 +55,11 @@ enum OSTYPE ProbeOS(int verb, char *targ
+          else ierr = 1;
        }
+       else if (strstr(res, "HP-UX")) OS = OSHPUX;
++/*
++ *    Accept GNU (HURD) as Linux, since they seem to use same stuff;
++ *    This is patch from Sylvestre Ledru; I have no direct experience wt HURD
++ */
++      else if(strstr(res, "GNU")) OS = OSLinux;
+       else ierr = 1;
+       free(res);
     }
-    if (MachIsS390(mach))

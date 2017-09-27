@@ -15,8 +15,8 @@ GFORTRAN_LIB_PATH := $(shell $(CC) -print-search-dirs | grep ^install: | awk '{p
 
 # Flags common to both the generic and custom packages
 CONFIGURE_FLAGS := --prefix="$(CURDIR)/debian/tmp"			 	\
-	--incdir="$(CURDIR)/debian/tmp/usr/include/"				\
-	--libdir="$(CURDIR)/debian/tmp/usr/lib/"				\
+	--incdir="$(CURDIR)/debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/"	\
+	--libdir="$(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/"		\
 	--shared								\
 	-D c -DWALL 								\
 	-Ss f77lib "-L$(GFORTRAN_LIB_PATH) -lgfortran -lgcc_s -lpthread"	\
@@ -107,10 +107,6 @@ override_dh_auto_configure:
 	@grep ARCH < build/Make.inc | head -1 | awk '{print $$3}'
 	@echo "=============================================="
 
-	# Create pkgconfig files
-	sed -e "s%@DEB_VERSION_UPSTREAM@%$(DEB_VERSION_UPSTREAM)%" < debian/blas-atlas.pc.in > debian/blas-atlas.pc
-	sed -e "s%@DEB_VERSION_UPSTREAM@%$(DEB_VERSION_UPSTREAM)%" < debian/lapack-atlas.pc.in > debian/lapack-atlas.pc
-
 override_dh_auto_build:
 	make -C build
 
@@ -184,7 +180,7 @@ override_dh_auto_build:
 	# Note that we unpack liblapack_atlas.a after liblapack_pic.a, in order to overwrite routines in the latter
 	mkdir tmp
 	cd tmp && \
-		ar x /usr/lib/liblapack_pic.a && \
+		ar x /usr/lib/$(DEB_HOST_MULTIARCH)/liblapack_pic.a && \
 		ar x ../build/lib/liblapack_atlas.a
 	ar r liblapack.a tmp/*.o
 	rm -rf tmp
@@ -209,7 +205,7 @@ override_dh_auto_install:
 	cd build/interfaces/blas/F77/testing && $(MAKE)
 
 	make -C build install # The build system does not support setting DESTDIR at install time
-	mv debian/tmp/usr/include/*.h debian/tmp/usr/include/atlas/
+	mv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas.h debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas-atlas.h
 
 
 # We want packages using libblas/liblapack to depend on any BLAS/LAPACK
@@ -224,6 +220,9 @@ override_dh_makeshlibs:
 	if test -f libptcblas.so; then echo "libptcblas 3 libatlas3-base" >> debian/libatlas3-base/DEBIAN/shlibs; fi
 	if test -f libptf77blas.so; then echo "libptf77blas 3 libatlas3-base" >> debian/libatlas3-base/DEBIAN/shlibs; fi
 
+override_dh_shlibdeps:
+	dh_shlibdeps -a -l $$(pwd)
+
 override_dh_gencontrol:
 	dh_gencontrol -- -VBuilt-Using="`dpkg-query -W -f='$${source:Package} (= $${source:Version})' liblapack-pic`"
 
@@ -232,6 +231,19 @@ override_dh_auto_clean:
 	rm -f TexDoc/*.pdf
 	rm -f debian/blas-atlas.pc debian/lapack-atlas.pc
 	rm -f *.a *.so *.so.*
+
+GENERATED_DEBIAN_FILES := $(patsubst %.in,%,$(wildcard debian/*.pc.in debian/*.postinst.in debian/*.prerm.in))
+
+$(GENERATED_DEBIAN_FILES): %: %.in
+	sed -e "s/@DEB_VERSION_UPSTREAM@/$(DEB_VERSION_UPSTREAM)/g" \
+	    -e "s/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g" < $< > $@
+
+override_dh_install: $(GENERATED_DEBIAN_FILES)
+	dh_install
+
+override_dh_clean:
+	dh_clean
+	rm -f $(GENERATED_DEBIAN_FILES)
 
 get-orig-source:
 	-uscan --upstream-version 0

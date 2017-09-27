@@ -1,4 +1,4 @@
-atlas (3.10.3-3+rpi1) buster-staging; urgency=medium
+atlas (3.10.3-5+rpi1) buster-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,24 @@ atlas (3.10.3-3+rpi1) buster-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Peter Michael Green <plugwash@raspbian.org>  Thu, 24 Aug 2017 16:04:25 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Wed, 27 Sep 2017 02:29:13 +0000
+
+atlas (3.10.3-5) unstable; urgency=low
+
+  * libatlas3-base Conflicts+Replaces libcblas3. (Closes: #874802)
+  * libatlas-base-dev Conflicts+Replaces libcblas-dev. (Closes: #874803)
+
+ -- Sébastien Villemot <sebastien@debian.org>  Wed, 13 Sep 2017 22:29:27 +0200
+
+atlas (3.10.3-4) unstable; urgency=low
+
+  * Multi-archify the package.
+    Incidentally, drop the dependency of libatlas-base-dev on libblas-dev, since
+    cblas.h is now managed by the alternative.
+  * kfreebsd.patch: update using the fix applied upstream.
+  * Bump Standards-Version to 4.1.0.
+
+ -- Sébastien Villemot <sebastien@debian.org>  Sat, 09 Sep 2017 10:27:50 +0200
 
 atlas (3.10.3-3) unstable; urgency=medium
 

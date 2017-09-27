@@ -23,11 +23,14 @@ It is trivial to switch between the various BLAS/LAPACK implementations.
 
 - BLAS:
 
- $ sudo update-alternatives --config libblas.so.3
+ $ sudo update-alternatives --config libblas.so.3-<multiarch>
 
 - LAPACK:
 
- $ sudo update-alternatives --config liblapack.so.3
+ $ sudo update-alternatives --config liblapack.so.3-<multiarch>
+
+where <multiarch> is the multiarch path for you architecture (e.g.
+x86_64-linux-gnu for amd64).
 
 More information is available here:
 
@@ -106,5 +109,5 @@ Thanks to David Cournapeau for providing all the patches for the shared
 libraries managements.
 
 
- -- Sébastien Villemot <sebastien@debian.org>, Wed,  2 Aug 2017 14:38:47 +0200
+ -- Sébastien Villemot <sebastien@debian.org>, Thu,  7 Sep 2017 21:50:00 +0200
  -- Sylvestre Ledru <sylvestre@debian.org>, Tue, 15 May 2012 18:05:34 +0200

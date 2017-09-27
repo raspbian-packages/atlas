@@ -2,7 +2,8 @@ Description: On mips{,el}, do not pass -mabi=n32 flag.
  The mips{,el} ports use the O32 ABI.
  See https://www.linux-mips.org/wiki/MIPS_ABI_History for more details on ABIs.
 Bug: https://sourceforge.net/p/math-atlas/support-requests/1053/
-Last-Update: 2017-08-16
+Applied-Upstream: 3.10.4
+Last-Update: 2017-08-25
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/CONFIG/src/SpewMakeInc.c

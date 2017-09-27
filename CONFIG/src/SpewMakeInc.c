@@ -794,10 +794,8 @@ int main(int nargs, char **args)
             fprintf(fpout, " -melf_i386");
          else if (ptrbits == 64)
             fprintf(fpout, " -melf_x86_64");
- #ifdef __FreeBSD_kernel__
-          fprintf(fpout, "_fbsd");
-#endif
-
+         if (OS == OSFreeBSD)
+            fprintf(fpout, "_fbsd");
       }
    }
    if (MachIsS390(mach))

@@ -2,7 +2,8 @@ Description: Fix typos
 Author: Sébastien Villemot <sebastien@debian.org>
 Forwarded: https://sourceforge.net/p/math-atlas/patches/78/
            https://github.com/math-atlas/math-atlas/pull/31
-Last-Update: 2017-08-11
+Applied-Upstream: 3.10.4
+Last-Update: 2017-08-25
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/TexDoc/atlas_devel.tex

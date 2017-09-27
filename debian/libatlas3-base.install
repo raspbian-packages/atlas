@@ -1,6 +1,8 @@
-libblas.so.*         /usr/lib/atlas-base/atlas/
-liblapack.so.*       /usr/lib/atlas-base/atlas/
-libatlas.so.*        /usr/lib/
-lib*cblas.so.*        /usr/lib/
-lib*f77blas.so.*      /usr/lib/
-liblapack_atlas.so.* /usr/lib/
+#!/usr/bin/dh-exec
+
+libblas.so.*         /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+liblapack.so.*       /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+libatlas.so.*        /usr/lib/${DEB_HOST_MULTIARCH}/
+lib*cblas.so.*       /usr/lib/${DEB_HOST_MULTIARCH}/
+lib*f77blas.so.*     /usr/lib/${DEB_HOST_MULTIARCH}/
+liblapack_atlas.so.* /usr/lib/${DEB_HOST_MULTIARCH}/
