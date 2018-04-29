@@ -1,0 +1,114 @@
+Description: Skip optimizations for big-endian PowerPC.
+ Some of the existing optimized files/cases for PowerPC
+ contain assembly instructions with implicit big-endian
+ behavior - thus incorrect for the little-endian mode -
+ incurring tests failures during the build (i.e., FTBFS).
+ This is being worked on; this is the workaround for now.
+ .
+ Note: this is an alternative for Michael Normand's patch
+ 'atlas.3.10.2-ppc64le_do_not_use_files_with_lvx.patch',
+ in order not to touch file lists/indexes, but only C 
+ source code, so the C preprocessor can avoid code per-arch.
+ .
+ For more details, see:
+ https://bugzilla.redhat.com/show_bug.cgi?id=1080073#c40
+Bug-Debian: https://bugs.debian.org/766695
+Forwarded: http://sourceforge.net/p/math-atlas/patches/65/
+Author: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Reviewed-by: Sébastien Villemot <sebastien@debian.org>
+Last-Update: 2014-10-28
+--- a/tune/blas/gemm/CASES/ATL_cmm4x4x128_av.c
++++ b/tune/blas/gemm/CASES/ATL_cmm4x4x128_av.c
+@@ -7,6 +7,11 @@
+  * meaning that this kernel will do an extra store of vector C to memory
+  * for load by the scalar FPU.
+  */
++
++#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++/* FIXME: port to little-endian powerpc64. */
++#else
++
+ #include "atlas_asm.h"
+ 
+ #if !defined(ATL_AS_OSX_PPC) && !defined(ATL_GAS_LINUX_PPC)
+@@ -4257,3 +4262,5 @@ MPEELEDU:
+         ld      r3, FST(r1)
+         addi    r1, r1, FSIZE
+         blr
++
++#endif	/* little-endian powerpc64 */
+--- a/tune/blas/gemm/CASES/ATL_dmm4x4x80_ppc.c
++++ b/tune/blas/gemm/CASES/ATL_dmm4x4x80_ppc.c
+@@ -28,6 +28,10 @@
+  *
+  */
+ 
++#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++/* FIXME: port to little-endian powerpc64. */
++#else
++
+ #include "atlas_asm.h"
+ /*
+  * NOTE: this kernel written by R. Clint Whaley, but it uses two key ideas
+@@ -7502,3 +7506,5 @@ DONE:
+         addi    r1, r1, FSIZE
+ #endif
+         blr
++
++#endif  /* little-endian powerpc64 */
+--- a/tune/blas/gemm/CASES/ATL_dmm8x4x2_vsx.c
++++ b/tune/blas/gemm/CASES/ATL_dmm8x4x2_vsx.c
+@@ -27,6 +27,10 @@
+  *
+  */
+ 
++#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++/* FIXME: port to little-endian powerpc64. */
++#else
++
+ #include <altivec.h>
+ #include "atlas_misc.h"
+ #include "atlas_prefetch.h"               /* ATL_pfl1R, ATL_pfl1W */
+@@ -659,3 +663,5 @@ void ATL_USERMM
+         }
+     }
+ }
++
++#endif  /* little-endian powerpc64 */
+--- a/tune/blas/gemm/CASES/ATL_smm4x4x128_av.c
++++ b/tune/blas/gemm/CASES/ATL_smm4x4x128_av.c
+@@ -28,6 +28,9 @@
+  *
+  */
+ 
++#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++/* FIXME: port to little-endian powerpc64. */
++#else
+ 
+ #include "atlas_asm.h"
+ 
+@@ -8340,3 +8343,5 @@ MPEELEDU:
+         ld      r3, FST(r1)
+         addi    r1, r1, FSIZE
+         blr
++
++#endif  /* little-endian powerpc64 */
+--- a/tune/blas/gemm/CASES/ATL_smm8x2x4_av.c
++++ b/tune/blas/gemm/CASES/ATL_smm8x2x4_av.c
+@@ -27,6 +27,10 @@
+  *
+  */
+ 
++#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++/* FIXME: port to little-endian powerpc64. */
++#else
++
+ #include <altivec.h>
+ #include "atlas_misc.h"
+ #include "atlas_prefetch.h"               /* ATL_pfl1R, ATL_pfl1W */
+@@ -326,3 +330,5 @@ void ATL_USERMM
+         }
+     }
+ }
++
++#endif  /* little-endian powerpc64 */

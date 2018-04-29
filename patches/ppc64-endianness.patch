@@ -1,0 +1,19 @@
+Description: Fix endianness detection on ppc64*
+ The __ORDER_LITTLE_ENDIAN__ macro is defined even on big endian systems.
+Author: Sébastien Villemot <sebastien@debian.org>
+Forwarded: https://sourceforge.net/p/math-atlas/patches/79/
+Applied-Upstream: 3.10.4
+Last-Update: 2017-08-25
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/CONFIG/src/SpewMakeInc.c
++++ b/CONFIG/src/SpewMakeInc.c
+@@ -557,7 +557,7 @@ int main(int nargs, char **args)
+    fprintf(fpout, "#  -------------------------------------------------\n");
+    fprintf(fpout, "   ARCH = %s", machnam[mach]);
+    fprintf(fpout, "%d", ptrbits);
+-   #if defined(__powerpc64__) && defined(__ORDER_LITTLE_ENDIAN__)
++   #if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+       fprintf(fpout, "LE");
+    #endif
+    if (ISAX)
