@@ -1,0 +1,11 @@
+#!/usr/bin/dh-exec
+
+build/bin/*tst usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/level1/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/gemv/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/gemm/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/tune/blas/ger/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/interfaces/blas/C/testing/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+build/interfaces/blas/F77/testing/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+interfaces/blas/C/testing/*.dat usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+interfaces/blas/F77/testing/*.dat usr/lib/${DEB_HOST_MULTIARCH}/atlas/
