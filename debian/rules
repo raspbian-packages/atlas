@@ -46,6 +46,8 @@ else ifeq ($(DEB_HOST_ARCH_CPU),i386)
 MACHTYPE := x86x87
 else ifeq ($(DEB_HOST_ARCH_CPU),amd64)
 MACHTYPE := x86SSE2
+else ifeq ($(DEB_HOST_ARCH),ia64)
+MACHTYPE := IA64Itan
 else
 # The same as UNKNOWN, except that it does not try autodetection
 # See debian/patches/generic.diff
@@ -207,6 +209,9 @@ override_dh_auto_install:
 	make -C build install # The build system does not support setting DESTDIR at install time
 	mv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas.h debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas-atlas.h
 
+override_dh_installdocs:
+	dh_installdocs -plibatlas-doc --doc-main-package=libatlas-base-dev
+	dh_installdocs -Nlibatlas-doc
 
 # We want packages using libblas/liblapack to depend on any BLAS/LAPACK
 # alternative, and we want packages depending on ATLAS-specific libraries
@@ -222,9 +227,6 @@ override_dh_makeshlibs:
 
 override_dh_shlibdeps:
 	dh_shlibdeps -a -l $$(pwd)
-
-override_dh_gencontrol:
-	dh_gencontrol -- -VBuilt-Using="`dpkg-query -W -f='$${source:Package} (= $${source:Version})' liblapack-pic`"
 
 override_dh_auto_clean:
 	rm -rf build
@@ -244,6 +246,3 @@ override_dh_install: $(GENERATED_DEBIAN_FILES)
 override_dh_clean:
 	dh_clean
 	rm -f $(GENERATED_DEBIAN_FILES)
-
-get-orig-source:
-	-uscan --upstream-version 0

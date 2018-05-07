@@ -1,7 +1,6 @@
 Description: Fix typos
 Author: Sébastien Villemot <sebastien@debian.org>
-Forwarded: https://sourceforge.net/p/math-atlas/patches/78/
-           https://github.com/math-atlas/math-atlas/pull/31
+Forwarded: https://sourceforge.net/p/math-atlas/patches/78/, https://github.com/math-atlas/math-atlas/pull/31
 Applied-Upstream: 3.10.4
 Last-Update: 2017-08-25
 ---

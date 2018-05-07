@@ -11,4 +11,4 @@ Abstract: This note provides a brief overview of ATLAS, and describes how to ins
 Section: Programming
 
 Format: PDF
-Files: /usr/share/doc/libatlas-doc/atlas_install.pdf.gz
+Files: /usr/share/doc/libatlas-base-dev/atlas_install.pdf.gz

@@ -1,4 +1,4 @@
-atlas (3.10.3-5+rpi1) buster-staging; urgency=medium
+atlas (3.10.3-6+rpi1) buster-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,23 @@ atlas (3.10.3-5+rpi1) buster-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Raspbian forward porter <root@raspbian.org>  Wed, 27 Sep 2017 02:29:13 +0000
+ -- Peter Michael Green <plugwash@raspbian.org>  Sat, 05 May 2018 11:30:48 +0000
+
+atlas (3.10.3-6) unstable; urgency=medium
+
+  * Resurrect architectural defaults for ia64.
+  * Add architectural defaults for riscv64.
+    Thanks to Manuel A. Fernandez Montecelo (Closes: #897128)
+  * Bump to debhelper compat level 11.
+  * d/rules: remove get-orig-source target.
+  * Remove Built-Using field.
+    Since both LAPACK and ATLAS are under BSD-3-clause, there is no reason to
+    use this field (which is now restricted to license compliance issues).
+  * Bump S-V to 4.1.4.
+  * Update Vcs-* fields for move to salsa.
+  * Install doc under /u/s/d/libatlas-base-dev, per Policy §12.3.
+
+ -- Sébastien Villemot <sebastien@debian.org>  Sun, 29 Apr 2018 19:37:01 +0200
 
 atlas (3.10.3-5) unstable; urgency=low
 

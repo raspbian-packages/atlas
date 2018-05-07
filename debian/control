@@ -3,15 +3,15 @@ Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.
 Uploaders: Sébastien Villemot <sebastien@debian.org>
 Section: devel
 Priority: optional
-Build-Depends: debhelper (>= 10),
+Build-Depends: debhelper (>= 11),
                dh-exec,
                gfortran,
                liblapack-pic (>= 3.7.1-2~),
                texlive-latex-base,
                ghostscript
-Standards-Version: 4.1.0
-Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/atlas.git
-Vcs-Git: https://anonscm.debian.org/git/debian-science/packages/atlas.git
+Standards-Version: 4.1.4
+Vcs-Browser: https://salsa.debian.org/science-team/atlas
+Vcs-Git: https://salsa.debian.org/science-team/atlas.git
 Homepage: http://math-atlas.sourceforge.net/
 
 Package: libatlas3-base
@@ -28,7 +28,6 @@ Conflicts: libcblas3
 Provides: libblas.so.3,
           liblapack.so.3
 Replaces: libcblas3
-Built-Using: ${Built-Using}
 Description: Automatically Tuned Linear Algebra Software, generic shared
  ATLAS is an approach for the automatic generation and optimization of
  numerical software. Currently ATLAS supplies optimized versions for the
@@ -61,7 +60,6 @@ Provides: libblas.so,
           liblapack.so
 Replaces: libatlas-dev (<< 3.10.3-2),
           libcblas-dev
-Built-Using: ${Built-Using}
 Description: Automatically Tuned Linear Algebra Software, generic static
  ATLAS is an approach for the automatic generation and optimization of
  numerical software. Currently ATLAS supplies optimized versions for the
