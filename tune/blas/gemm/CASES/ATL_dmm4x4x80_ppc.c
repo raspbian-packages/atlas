@@ -353,9 +353,9 @@ MLOOP:
 	fmul 	rC11, rA1, rB1
 	fmul 	rC21, rA2, rB1
 	fmul 	rC31, rA3, rB1
-		dcbt	0, pfA, 0
+		dcbt	0, pfA
         	addi    pfA, pfA, 128
-		dcbt	0, pfB, 0
+		dcbt	0, pfB
         	addi    pfB, pfB, 128
 	fmul 	rC02, rA0, rB2
 	fmul 	rC12, rA1, rB2
@@ -438,9 +438,9 @@ MLOOP:
 	fmadd	rC12, rA1, rB2, rC12
 	fmadd	rC22, rA2, rB2, rC22
 	fmadd	rC32, rA3, rB2, rC32
-		dcbt	0, pfA, 0
+		dcbt	0, pfA
         	addi    pfA, pfA, 128
-		dcbt	0, pfB, 0
+		dcbt	0, pfB
         	addi    pfB, pfB, 128
 	fmadd	rC03, rA0, rB3, rC03
 	fmadd	rC13, rA1, rB3, rC13
@@ -467,8 +467,8 @@ MLOOP:
 	fmadd	rC10, rA1, rB0, rC10
 	fmadd	rC20, rA2, rB0, rC20
 	fmadd	rC30, rA3, rB0, rC30
-		dcbt	0, pfA, 0
-		dcbt	0, pfB, 0
+		dcbt	0, pfA
+		dcbt	0, pfB
         	addi    pfA, pfA, 128
         	addi    pfB, pfB, 128
 	fmadd	rC01, rA0, rB1, rC01
@@ -3956,9 +3956,9 @@ MPEELED:
 	fmul 	rC11, rA1, rB1
 	fmul 	rC21, rA2, rB1
 	fmul 	rC31, rA3, rB1
-		dcbt	0, pfA, 0
+		dcbt	0, pfA
         	addi    pfA, pfA, 128
-		dcbt	0, pfB, 0
+		dcbt	0, pfB
         	addi    pfB, pfB, 128
 	fmul 	rC02, rA0, rB2
 	fmul 	rC12, rA1, rB2
@@ -4041,9 +4041,9 @@ MPEELED:
 	fmadd	rC12, rA1, rB2, rC12
 	fmadd	rC22, rA2, rB2, rC22
 	fmadd	rC32, rA3, rB2, rC32
-		dcbt	0, pfA, 0
+		dcbt	0, pfA
         	addi    pfA, pfA, 128
-		dcbt	0, pfB, 0
+		dcbt	0, pfB
         	addi    pfB, pfB, 128
 	fmadd	rC03, rA0, rB3, rC03
 	fmadd	rC13, rA1, rB3, rC13
@@ -4070,8 +4070,8 @@ MPEELED:
 	fmadd	rC10, rA1, rB0, rC10
 	fmadd	rC20, rA2, rB0, rC20
 	fmadd	rC30, rA3, rB0, rC30
-		dcbt	0, pfA, 0
-		dcbt	0, pfB, 0
+		dcbt	0, pfA
+		dcbt	0, pfB
         	addi    pfA, pfA, 128
         	addi    pfB, pfB, 128
 	fmadd	rC01, rA0, rB1, rC01
