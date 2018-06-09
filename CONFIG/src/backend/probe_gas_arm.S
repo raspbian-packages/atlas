@@ -1,5 +1,8 @@
 #define ATL_GAS_ARM
 #include "atlas_asm.h"
+#ifdef __ARM_ARCH_4T__
+#error "Debian armel is only v4t, but ATLAS needs a more recent ISA"
+#endif
 #
 # Linux ARM assembler for:
 # int asm_probe(int i)
