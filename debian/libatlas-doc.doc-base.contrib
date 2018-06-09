@@ -1,0 +1,14 @@
+Document: atlas-contrib
+Title: User contribution to ATLAS
+Author: R. Clint Whaley
+Abstract: This paper describes the method by which users can speed up ATLAS for themselves,
+ as well as contribute any such speedup to the ATLAS project. It’s written to get you
+ started, in a highly informal (read sloppy) fashion. There’s a lot of material that
+ optimally should be covered in detail, which is only hinted at in this document. Since
+ no real attempt has been made to make the document sheerly backward referential,
+ it is recommended that the user at least skim the entire section before attempting to
+ understand and/or apply information from a given subsection.
+Section: Programming
+
+Format: PDF
+Files: /usr/share/doc/libatlas-base-dev/atlas_contrib.pdf.gz
