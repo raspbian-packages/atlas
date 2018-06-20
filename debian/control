@@ -90,6 +90,8 @@ Architecture: all
 Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends}
+Breaks: libatlas-base-dev (<< 3.10.3-6~)
+Replaces: libatlas-base-dev (<< 3.10.3-6~)
 Description: Automatically Tuned Linear Algebra Software, documentation
  ATLAS is an approach for the automatic generation and optimization of
  numerical software. Currently ATLAS supplies optimized versions for the
