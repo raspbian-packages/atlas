@@ -1,0 +1,16 @@
+debian/archdefs/amd64/x86SSE264SSE2.tar.bz2
+debian/archdefs/arm/GENERIC32.tar.bz2
+debian/archdefs/arm/GENERIC32FPV3D16MAC.tar.bz2
+debian/archdefs/arm64/GENERIC64.tar.bz2
+debian/archdefs/i386/x86x8732.tar.bz2
+debian/archdefs/ia64/IA64Itan64.tar.bz2
+debian/archdefs/mips/GENERIC32.tar.bz2
+debian/archdefs/mipsel/GENERIC32.tar.bz2
+debian/archdefs/mips64el/GENERIC64.tar.bz2
+debian/archdefs/powerpc/GENERIC32.tar.bz2
+debian/archdefs/ppc64/GENERIC64.tar.bz2
+debian/archdefs/ppc64el/POWER864LE.tar.bz2
+debian/archdefs/riscv64/GENERIC64.tar.bz2
+debian/archdefs/s390x/IBMz964.tar.bz2
+debian/archdefs/s390x/IBMz1264.tar.bz2
+debian/archdefs/sparc64/GENERIC64.tar.bz2
