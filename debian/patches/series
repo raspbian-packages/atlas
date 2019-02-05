@@ -1,7 +1,6 @@
 rename-lapack-atlas.patch
 mips.patch
 kfreebsd.patch
-armel-is-v4t.patch
 generic.patch
 ppc64el-abiv2.patch
 ppc64el-ifdef-files-with-lvx.patch

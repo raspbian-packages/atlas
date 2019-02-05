@@ -1,4 +1,4 @@
-atlas (3.10.3-7+rpi1) buster-staging; urgency=medium
+atlas (3.10.3-8+rpi1) buster-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,18 @@ atlas (3.10.3-7+rpi1) buster-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Raspbian forward porter <root@raspbian.org>  Wed, 20 Jun 2018 20:08:14 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Tue, 05 Feb 2019 16:56:42 +0000
+
+atlas (3.10.3-8) unstable; urgency=medium
+
+  * Drop armel-is-v4t.patch.
+    No longer needed now that armel baseline is v5te (see #882174).
+  * Fix build of custom package (.pc file was generated too late)
+  * Bump to debhelper compat level 12
+  * Add Rules-Requires-Root: no
+  * Bump to S-V 4.3.0
+
+ -- Sébastien Villemot <sebastien@debian.org>  Tue, 22 Jan 2019 11:31:26 +0100
 
 atlas (3.10.3-7) unstable; urgency=medium
 

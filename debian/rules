@@ -98,10 +98,17 @@ else
 endif
 
 
+GENERATED_DEBIAN_FILES := $(patsubst %.in,%,$(wildcard debian/*.pc.in debian/*.postinst.in debian/*.prerm.in))
+
+$(GENERATED_DEBIAN_FILES): %: %.in
+	sed -e "s/@DEB_VERSION_UPSTREAM@/$(DEB_VERSION_UPSTREAM)/g" \
+	    -e "s/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g" < $< > $@
+
+
 %:
 	dh $@
 
-override_dh_auto_configure:
+override_dh_auto_configure: $(GENERATED_DEBIAN_FILES)
 	mkdir -p build/
 	cd build && ../configure $(CONFIGURE_FLAGS)
 	@echo "=============================================="
@@ -234,13 +241,7 @@ override_dh_auto_clean:
 	rm -f debian/blas-atlas.pc debian/lapack-atlas.pc
 	rm -f *.a *.so *.so.*
 
-GENERATED_DEBIAN_FILES := $(patsubst %.in,%,$(wildcard debian/*.pc.in debian/*.postinst.in debian/*.prerm.in))
-
-$(GENERATED_DEBIAN_FILES): %: %.in
-	sed -e "s/@DEB_VERSION_UPSTREAM@/$(DEB_VERSION_UPSTREAM)/g" \
-	    -e "s/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g" < $< > $@
-
-override_dh_install: $(GENERATED_DEBIAN_FILES)
+override_dh_install:
 	dh_install
 
 override_dh_clean:
