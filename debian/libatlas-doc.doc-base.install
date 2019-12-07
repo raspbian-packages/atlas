@@ -1,0 +1,14 @@
+Document: atlas-install
+Title: ATLAS Installation Guide
+Author: R. Clint Whaley
+Abstract: This note provides a brief overview of ATLAS, and describes how to install it.
+ It includes extensive discussion of common configure options, and describes why they
+ might be employed on various platforms. In addition to discussing how to configure and
+ build the ATLAS package, this note also describes how an installer can confirm that
+ the resulting libraries are producing correct answers and running efficiently. Extensive
+ examples are provided, including a full-length example showing the installation of both
+ ATLAS and LAPACK on an example architecture.
+Section: Programming
+
+Format: PDF
+Files: /usr/share/doc/libatlas-base-dev/atlas_install.pdf.gz
