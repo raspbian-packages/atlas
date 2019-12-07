@@ -60,7 +60,7 @@ static inline vector TYPE vec_mergel(vector TYPE a, vector TYPE b)
 #ifndef ATL_GOT_L1PREFETCH
 #ifdef _ARCH_PPC
 #undef ATL_pfl1R
-#define ATL_pfl1R(mem)  { __asm__ volatile ("dcbt 0, %0, 0" : : "r" ((mem))); }
+#define ATL_pfl1R(mem)  { __asm__ volatile ("dcbt 0, %0" : : "r" ((mem))); }
 #endif
 #endif
 
