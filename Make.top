@@ -657,8 +657,8 @@ install_inc:
 install_lib:
 	cp $(LIBdir)/libatlas.a $(INSTdir)/.
 	cp $(LIBdir)/libcblas.a $(INSTdir)/.
-	cp $(LIBdir)/liblapack.a $(INSTdir)/.
-	chmod 0644 $(INSTdir)/libatlas.a  $(INSTdir)/liblapack.a \
+	cp $(LIBdir)/liblapack_atlas.a $(INSTdir)/.
+	chmod 0644 $(INSTdir)/libatlas.a  $(INSTdir)/liblapack_atlas.a \
                    $(INSTdir)/libcblas.a 
 	- cp $(LIBdir)/libf77blas.a $(INSTdir)/.
 	- chmod 0644 $(INSTdir)/libf77blas.a
