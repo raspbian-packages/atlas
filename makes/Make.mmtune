@@ -155,7 +155,7 @@ mmsearch.o : $(mySRCdir)/mmsearch.c $(parsedeps)
 SSEGENOUTDIR :
 	mkdir SSEGENOUTDIR
 xmmgen_sse : $(mySRCdir)/mmgen_sse.c
-	$(XCC) -o $@ $(mySRCdir)/mmgen_sse.c -lm
+	$(XCC) $(XCCFLAGS) -o $@ $(mySRCdir)/mmgen_sse.c -lm
 xmmksearch_sse : xmmgen_sse mmksearch_sse.o SSEGENOUTDIR
 	$(XCC) $(XCCFLAGS) -o $@ mmksearch_sse.o
 mmksearch_sse.o : $(mySRCdir)/mmksearch_sse.c $(parsedeps)
