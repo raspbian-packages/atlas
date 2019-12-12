@@ -6,10 +6,10 @@ Priority: optional
 Build-Depends: debhelper-compat (= 12),
                dh-exec,
                gfortran,
-               liblapack-pic (>= 3.7.1-2~),
+               liblapack-dev (>= 3.8.0-6~),
                texlive-latex-base,
                ghostscript
-Standards-Version: 4.3.0
+Standards-Version: 4.4.1
 Vcs-Browser: https://salsa.debian.org/science-team/atlas
 Vcs-Git: https://salsa.debian.org/science-team/atlas.git
 Homepage: http://math-atlas.sourceforge.net/
@@ -38,8 +38,8 @@ Description: Automatically Tuned Linear Algebra Software, generic shared
  .
  The libraries in this package are built without any processor extension
  instructions, and should run on all processors of this general
- architecture, albeit less than optimally.  
- . 
+ architecture, albeit less than optimally.
+ .
  If you want to create an ATLAS packaged optimized for your processor, see the
  section: "Building Optimized Atlas Packages on your ARCH" in README.Debian
 

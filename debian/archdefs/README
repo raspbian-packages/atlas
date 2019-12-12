@@ -12,7 +12,7 @@ generated (other details are in README.source):
 - arm64: ATLAS 3.10.3 / asachi.debian.org / sid / 2016-08-05
 - i386: from ATLAS 3.10.1 tarball
 - ia64: ATLAS 3.10.1 / merulo.debian.org / sid / 2013-06-08
-- mips: ATLAS 3.10.1 / gabrielli.debian.org / sid / 2013-07-27
+- m68k: created by John Paul Adrian Glaubitz (see https://bugs.debian.org/945913)
 - mipsel: ATLAS 3.10.1 / eder.debian.org / sid / 2013-06-07
 - mips64el: ATLAS 3.10.2 / etler.debian.org / sid / 2015-11-08
 - powerpc: ATLAS 3.10.1 / partch.debian.org / sid / 2013-06-06
