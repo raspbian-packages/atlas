@@ -28,6 +28,9 @@
  *
  */
 
+#if defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+/* FIXME: port to little-endian powerpc64. */
+#else
 
 #include "atlas_asm.h"
 
@@ -8340,3 +8343,5 @@ MPEELEDU:
         ld      r3, FST(r1)
         addi    r1, r1, FSIZE
         blr
+
+#endif  /* little-endian powerpc64 */
