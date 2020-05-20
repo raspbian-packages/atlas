@@ -1,0 +1,6 @@
+libblas.so.*         /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+liblapack.so.*       /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+libatlas.so.*        /usr/lib/${DEB_HOST_MULTIARCH}/
+lib*cblas.so.*       /usr/lib/${DEB_HOST_MULTIARCH}/
+lib*f77blas.so.*     /usr/lib/${DEB_HOST_MULTIARCH}/
+liblapack_atlas.so.* /usr/lib/${DEB_HOST_MULTIARCH}/
