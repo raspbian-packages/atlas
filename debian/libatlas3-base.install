@@ -1,5 +1,3 @@
-#!/usr/bin/dh-exec
-
 libblas.so.*         /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
 liblapack.so.*       /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
 libatlas.so.*        /usr/lib/${DEB_HOST_MULTIARCH}/

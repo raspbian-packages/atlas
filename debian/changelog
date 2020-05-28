@@ -1,4 +1,4 @@
-atlas (3.10.3-9+rpi1) bullseye-staging; urgency=medium
+atlas (3.10.3-10+rpi1) bullseye-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,32 @@ atlas (3.10.3-9+rpi1) bullseye-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Raspbian forward porter <root@raspbian.org>  Thu, 12 Dec 2019 07:08:28 +0000
+ -- Peter Michael Green <plugwash@raspbian.org>  Thu, 28 May 2020 16:27:37 +0000
+
+atlas (3.10.3-10) unstable; urgency=medium
+
+  * Fix missing symbols in liblapack.so.3 when libblas.so.3 is not the one from
+    ATLAS.
+    The problem was that, in 3.10.3-9, liblapack.so.3 was no longer linked to
+    libatlas.so.3, despite an explicit -latlas in the link command.
+    This was due to the combination of two factors:
+    — ld now defaulting to --as-needed in bullseye
+    — libatlas.so.3 symbols being erroneously embedded in libblas.so.3
+    The fix consists in no longer embedding libatlas.so.3 symbols inside
+    libblas.so.3 (this has always been the intent, for some reason this had not
+    been correctly done). (Closes: #947827)
+  * debian/rules: simplify using debhelper 12.8’s execute_{before,after}_* rules
+  * Bump to debhelper 13
+    — this allows dropping the B-D on dh-exec
+    — mention libsatlas.so and libtatlas.so in debian/not-installed
+  * Separate the {build,binary}-arch rules from {build,binary}-indep
+  * Drop debian/NEWS.Debian: it has never been installed, since it had an
+    incorrect name
+  * Bump S-V to 4.5.0
+  * gfortran-10.patch: new patch, fixes FTBFS against gfortran 10
+    (Closes: #957015)
+
+ -- Sébastien Villemot <sebastien@debian.org>  Wed, 20 May 2020 16:42:23 +0200
 
 atlas (3.10.3-9) unstable; urgency=medium
 

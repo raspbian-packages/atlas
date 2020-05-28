@@ -1,5 +1,3 @@
-#!/usr/bin/dh-exec
-
 build/bin/*tst usr/lib/${DEB_HOST_MULTIARCH}/atlas/
 build/tune/blas/level1/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/
 build/tune/blas/gemv/x* usr/lib/${DEB_HOST_MULTIARCH}/atlas/

@@ -108,7 +108,7 @@ $(GENERATED_DEBIAN_FILES): %: %.in
 %:
 	dh $@
 
-override_dh_auto_configure: $(GENERATED_DEBIAN_FILES)
+override_dh_auto_configure-arch: $(GENERATED_DEBIAN_FILES)
 	mkdir -p build/
 	cd build && ../configure $(CONFIGURE_FLAGS)
 	@echo "=============================================="
@@ -116,7 +116,9 @@ override_dh_auto_configure: $(GENERATED_DEBIAN_FILES)
 	@grep ARCH < build/Make.inc | head -1 | awk '{print $$3}'
 	@echo "=============================================="
 
-override_dh_auto_build:
+override_dh_auto_configure-indep:
+
+override_dh_auto_build-arch:
 	make -C build
 
 	# We do not ship the lib{s,t}atlas.so created by ATLAS build system, they have an awkward name and an incorrect SONAME
@@ -166,7 +168,6 @@ override_dh_auto_build:
 	# Create static and shared full BLAS
 	mkdir tmp
 	cd tmp && \
-		ar x ../build/lib/libatlas.a && \
 		if test -f ../build/lib/libptf77blas.a -a -f ../build/lib/libptcblas.a; then \
 			ar x ../build/lib/libptf77blas.a && \
 			ar x ../build/lib/libptcblas.a; \
@@ -199,26 +200,25 @@ override_dh_auto_build:
 	ln -sf liblapack.so.$(DEB_VERSION_UPSTREAM) liblapack.so.3
 	ln -sf liblapack.so.$(DEB_VERSION_UPSTREAM) liblapack.so
 
+override_dh_auto_build-indep:
 	# Build PDF documentation
 ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
 	make -C TexDoc atlas_contrib.pdf atlas_devel.pdf atlas_install.pdf cblasqref.pdf f77blasqref.pdf lapackqref.pdf
 endif
 
-override_dh_auto_test:
+override_dh_auto_test-arch:
 	make -C build check || true
 	if test -f build/lib/libptcblas.a; then make -C build ptcheck; fi
 
-override_dh_auto_install:
+override_dh_auto_install-arch:
 	#build some stuff manually that doesn't seem to get built if the testsuite fails
 	cd build/interfaces/blas/C/testing && $(MAKE)
 	cd build/interfaces/blas/F77/testing && $(MAKE)
-
 	make -C build install # The build system does not support setting DESTDIR at install time
 	mv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas.h debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas-atlas.h
 
-override_dh_installdocs:
+override_dh_installdocs-indep:
 	dh_installdocs -plibatlas-doc --doc-main-package=libatlas-base-dev
-	dh_installdocs -Nlibatlas-doc
 
 # We want packages using libblas/liblapack to depend on any BLAS/LAPACK
 # alternative, and we want packages depending on ATLAS-specific libraries
@@ -226,13 +226,12 @@ override_dh_installdocs:
 #
 # Such a setting is not supported by dh_makeshlibs, so we ship a hand-crafted
 # shlibs file.
-override_dh_makeshlibs:
-	dh_makeshlibs
+execute_after_dh_makeshlibs-arch:
 	cp debian/libatlas3-base.shlibs debian/libatlas3-base/DEBIAN/shlibs
 	if test -f libptcblas.so; then echo "libptcblas 3 libatlas3-base" >> debian/libatlas3-base/DEBIAN/shlibs; fi
 	if test -f libptf77blas.so; then echo "libptf77blas 3 libatlas3-base" >> debian/libatlas3-base/DEBIAN/shlibs; fi
 
-override_dh_shlibdeps:
+override_dh_shlibdeps-arch:
 	dh_shlibdeps -a -l $$(pwd)
 
 override_dh_auto_clean:
@@ -241,9 +240,5 @@ override_dh_auto_clean:
 	rm -f debian/blas-atlas.pc debian/lapack-atlas.pc
 	rm -f *.a *.so *.so.*
 
-override_dh_install:
-	dh_install
-
-override_dh_clean:
-	dh_clean
+execute_after_dh_clean:
 	rm -f $(GENERATED_DEBIAN_FILES)

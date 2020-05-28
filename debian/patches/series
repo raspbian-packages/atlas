@@ -8,3 +8,4 @@ powerpc-dcbt.patch
 fix-typos.patch
 missing-cflags.patch
 ppc64-endianness.patch
+gfortran-10.patch
