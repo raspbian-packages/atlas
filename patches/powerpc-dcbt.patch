@@ -1,0 +1,277 @@
+Description: Fix FTBFS on powerpc with recent binutils
+ A recent modification in binutils (see
+ https://sourceware.org/ml/binutils/2015-04/msg00332.html) introduced a change
+ in the way the ppc assembly instructions "dcbt" and "dcbtst" are handled.
+ When compiling on a generic ppc processor, the 3-arguments form of those
+ instructions is no longer accepted, and one must instead use a 2-arguments
+ form (ignoring the TH argument).
+ .
+ Incidentally, the binutils change also fixed a bug in the way those
+ instructions were handled. On a generic ppc processor, they used to be
+ interpreted in the so-called "embedded" form ("dcbt TH, RA, RB", only used on
+ some embedded machines), while they should have been interpreted in the
+ so-called "server" form ("dcbt RA, RB, TH"). The ATLAS assembly directive were
+ apparently written in "server" form, and were therefore mis-assemblied.
+ .
+ Ideally, this patch should be improved in order to use the TH argument on
+ machines that support it (only needed in atlas_prefetch.h; other instances use
+ the default zero value for TH).
+Author: Sébastien Villemot <sebastien@debian.org>
+Forwarded: no
+Last-Update: 2015-11-23
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/include/atlas_prefetch.h
++++ b/include/atlas_prefetch.h
+@@ -101,15 +101,15 @@
+ #elif defined(ATL_GAS_PPC) && !defined(ATL_ARCH_POWER4)
+    #if defined(__GNUC__) || defined(__IBM_GCC_ASM)
+       #define ATL_pfl1R(mem) \
+-         __asm__ __volatile__ ("dcbt  0, %0, 0" : : "r" ((mem)))
++         __asm__ __volatile__ ("dcbt  0, %0" : : "r" ((mem)))
+       #define ATL_pfl1W(mem) \
+          __asm__ __volatile__ ("dcbtst  0, %0" : : "r" ((mem)))
+       #define ATL_pfST(mem) \
+-         __asm__ __volatile__ ("dcbt  0, %0, 1" : : "r" ((mem)))
++         __asm__ __volatile__ ("dcbt  0, %0" : : "r" ((mem)))
+       #define ATL_pfl1STi(mem, str) \
+         __asm__ __volatile__ ("rlwinm %0, %0, 0, 0, 24\n\t" \
+                               "ori %0, %0, 96+%2\n\t" \
+-                              "dcbt 0, %0, 8"  \
++                              "dcbt 0, %0"  \
+                               : "=r" (mem) \
+                               : "0" (mem), "i" (str))
+ 
+--- a/tune/blas/gemm/CASES/ATL_cmm4x4x128_av.c
++++ b/tune/blas/gemm/CASES/ATL_cmm4x4x128_av.c
+@@ -350,7 +350,7 @@ MLOOPU:
+       #endif
+ 	vmaddfp	vC01, vA0, vB1, vC33
+ 	vmaddfp	vC11, vA1, vB1, vC33
+-                        dcbt    0, pfA, 0
++                        dcbt    0, pfA
+ 	vmaddfp	vC21, vA2, vB1, vC33
+                         addi    pfA, pfA, 64
+ 	vmaddfp	vC31, vA3, vB1, vC33
+@@ -737,7 +737,7 @@ MLOOPU:
+    #endif
+ 	vmaddfp	vC02, va0, vb2, vC02
+ 	vmaddfp	vC12, va1, vb2, vC12
+-                        dcbt    0, pfB, 0
++                        dcbt    0, pfB
+ 	vmaddfp	vC22, va2, vb2, vC22
+                         addi    pfB, pfB, 64
+ 	vmaddfp	vC32, va3, vb2, vC32
+@@ -2337,7 +2337,7 @@ MPEELEDU:
+       #endif
+ 	vmaddfp	vC01, vA0, vB1, vC33
+ 	vmaddfp	vC11, vA1, vB1, vC33
+-                        dcbt    0, pfA, 0
++                        dcbt    0, pfA
+ 	vmaddfp	vC21, vA2, vB1, vC33
+                         addi    pfA, pfA, 64
+ 	vmaddfp	vC31, vA3, vB1, vC33
+@@ -2724,7 +2724,7 @@ MPEELEDU:
+    #endif
+ 	vmaddfp	vC02, va0, vb2, vC02
+ 	vmaddfp	vC12, va1, vb2, vC12
+-                        dcbt    0, pfB, 0
++                        dcbt    0, pfB
+ 	vmaddfp	vC22, va2, vb2, vC22
+                         addi    pfB, pfB, 64
+ 	vmaddfp	vC32, va3, vb2, vC32
+--- a/tune/blas/gemm/CASES/ATL_dmm4x4x32_ppc.c
++++ b/tune/blas/gemm/CASES/ATL_dmm4x4x32_ppc.c
+@@ -436,7 +436,7 @@ MLOOP:
+ 	fmadd	rC00, rA0, rB0, rC00
+         lfd     rb3, 8+KB3*8(pB0)
+ 	fmadd	rC10, rA1, rB0, rC10
+-                dcbt    0, pfB, 0
++                dcbt    0, pfB
+                 addi    pfB, pfB, 128
+ 	fmadd	rC20, rA2, rB0, rC20
+ 	fmadd	rC30, rA3, rB0, rC30
+@@ -2565,7 +2565,7 @@ MLOOP:
+ #if KB > 1
+ 	fmadd	rC00, ra0, rb0, rC00
+ 	fmadd	rC10, ra1, rb0, rC10
+-               dcbt    0, pfA, 0
++               dcbt    0, pfA
+                addi    pfA, pfA, 128
+ 	fmadd	rC20, ra2, rb0, rC20
+ 	fmadd	rC30, ra3, rb0, rC30
+--- a/tune/blas/gemm/CASES/ATL_dmm4x4x80_ppc.c
++++ b/tune/blas/gemm/CASES/ATL_dmm4x4x80_ppc.c
+@@ -353,9 +353,9 @@ MLOOP:
+ 	fmul 	rC11, rA1, rB1
+ 	fmul 	rC21, rA2, rB1
+ 	fmul 	rC31, rA3, rB1
+-		dcbt	0, pfA, 0
++		dcbt	0, pfA
+         	addi    pfA, pfA, 128
+-		dcbt	0, pfB, 0
++		dcbt	0, pfB
+         	addi    pfB, pfB, 128
+ 	fmul 	rC02, rA0, rB2
+ 	fmul 	rC12, rA1, rB2
+@@ -438,9 +438,9 @@ MLOOP:
+ 	fmadd	rC12, rA1, rB2, rC12
+ 	fmadd	rC22, rA2, rB2, rC22
+ 	fmadd	rC32, rA3, rB2, rC32
+-		dcbt	0, pfA, 0
++		dcbt	0, pfA
+         	addi    pfA, pfA, 128
+-		dcbt	0, pfB, 0
++		dcbt	0, pfB
+         	addi    pfB, pfB, 128
+ 	fmadd	rC03, rA0, rB3, rC03
+ 	fmadd	rC13, rA1, rB3, rC13
+@@ -467,8 +467,8 @@ MLOOP:
+ 	fmadd	rC10, rA1, rB0, rC10
+ 	fmadd	rC20, rA2, rB0, rC20
+ 	fmadd	rC30, rA3, rB0, rC30
+-		dcbt	0, pfA, 0
+-		dcbt	0, pfB, 0
++		dcbt	0, pfA
++		dcbt	0, pfB
+         	addi    pfA, pfA, 128
+         	addi    pfB, pfB, 128
+ 	fmadd	rC01, rA0, rB1, rC01
+@@ -3956,9 +3956,9 @@ MPEELED:
+ 	fmul 	rC11, rA1, rB1
+ 	fmul 	rC21, rA2, rB1
+ 	fmul 	rC31, rA3, rB1
+-		dcbt	0, pfA, 0
++		dcbt	0, pfA
+         	addi    pfA, pfA, 128
+-		dcbt	0, pfB, 0
++		dcbt	0, pfB
+         	addi    pfB, pfB, 128
+ 	fmul 	rC02, rA0, rB2
+ 	fmul 	rC12, rA1, rB2
+@@ -4041,9 +4041,9 @@ MPEELED:
+ 	fmadd	rC12, rA1, rB2, rC12
+ 	fmadd	rC22, rA2, rB2, rC22
+ 	fmadd	rC32, rA3, rB2, rC32
+-		dcbt	0, pfA, 0
++		dcbt	0, pfA
+         	addi    pfA, pfA, 128
+-		dcbt	0, pfB, 0
++		dcbt	0, pfB
+         	addi    pfB, pfB, 128
+ 	fmadd	rC03, rA0, rB3, rC03
+ 	fmadd	rC13, rA1, rB3, rC13
+@@ -4070,8 +4070,8 @@ MPEELED:
+ 	fmadd	rC10, rA1, rB0, rC10
+ 	fmadd	rC20, rA2, rB0, rC20
+ 	fmadd	rC30, rA3, rB0, rC30
+-		dcbt	0, pfA, 0
+-		dcbt	0, pfB, 0
++		dcbt	0, pfA
++		dcbt	0, pfB
+         	addi    pfA, pfA, 128
+         	addi    pfB, pfB, 128
+ 	fmadd	rC01, rA0, rB1, rC01
+--- a/tune/blas/gemm/CASES/ATL_dmm8x4x2_vsx.c
++++ b/tune/blas/gemm/CASES/ATL_dmm8x4x2_vsx.c
+@@ -60,7 +60,7 @@ static inline vector TYPE vec_mergel(vec
+ #ifndef ATL_GOT_L1PREFETCH
+ #ifdef _ARCH_PPC
+ #undef ATL_pfl1R
+-#define ATL_pfl1R(mem)  { __asm__ volatile ("dcbt 0, %0, 0" : : "r" ((mem))); }
++#define ATL_pfl1R(mem)  { __asm__ volatile ("dcbt 0, %0" : : "r" ((mem))); }
+ #endif
+ #endif
+ 
+--- a/tune/blas/gemm/CASES/ATL_smm4x4x128_av.c
++++ b/tune/blas/gemm/CASES/ATL_smm4x4x128_av.c
+@@ -376,7 +376,7 @@ MLOOP:
+       #endif
+ 	vmaddfp	vC01, vA0, vB1, vC33
+ 	vmaddfp	vC11, vA1, vB1, vC33
+-                        dcbt    0, pfA, 0
++                        dcbt    0, pfA
+ 	vmaddfp	vC21, vA2, vB1, vC33
+                         addi    pfA, pfA, 64
+ 	vmaddfp	vC31, vA3, vB1, vC33
+@@ -763,7 +763,7 @@ MLOOP:
+    #endif
+ 	vmaddfp	vC02, va0, vb2, vC02
+ 	vmaddfp	vC12, va1, vb2, vC12
+-                        dcbt    0, pfB, 0
++                        dcbt    0, pfB
+ 	vmaddfp	vC22, va2, vb2, vC22
+                         addi    pfB, pfB, 64
+ 	vmaddfp	vC32, va3, vb2, vC32
+@@ -1352,7 +1352,7 @@ MLOOP:
+    #endif
+ 	vmaddfp	vC01, vA0, vB1, vC01
+    #ifdef BETAX
+-	dcbt	0, pBETA, 0
++	dcbt	0, pBETA
+    #endif
+ 	vmaddfp	vC11, vA1, vB1, vC11
+ 	vmaddfp	vC21, vA2, vB1, vC21
+@@ -2319,7 +2319,7 @@ MPEELED:
+       #endif
+ 	vmaddfp	vC01, vA0, vB1, vC33
+ 	vmaddfp	vC11, vA1, vB1, vC33
+-                        dcbt    0, pfA, 0
++                        dcbt    0, pfA
+ 	vmaddfp	vC21, vA2, vB1, vC33
+                         addi    pfA, pfA, 64
+ 	vmaddfp	vC31, vA3, vB1, vC33
+@@ -2706,7 +2706,7 @@ MPEELED:
+    #endif
+ 	vmaddfp	vC02, va0, vb2, vC02
+ 	vmaddfp	vC12, va1, vb2, vC12
+-                        dcbt    0, pfB, 0
++                        dcbt    0, pfB
+ 	vmaddfp	vC22, va2, vb2, vC22
+                         addi    pfB, pfB, 64
+ 	vmaddfp	vC32, va3, vb2, vC32
+@@ -4379,7 +4379,7 @@ MLOOPU:
+       #endif
+ 	vmaddfp	vC01, vA0, vB1, vC33
+ 	vmaddfp	vC11, vA1, vB1, vC33
+-                        dcbt    0, pfA, 0
++                        dcbt    0, pfA
+ 	vmaddfp	vC21, vA2, vB1, vC33
+                         addi    pfA, pfA, 64
+ 	vmaddfp	vC31, vA3, vB1, vC33
+@@ -4766,7 +4766,7 @@ MLOOPU:
+    #endif
+ 	vmaddfp	vC02, va0, vb2, vC02
+ 	vmaddfp	vC12, va1, vb2, vC12
+-                        dcbt    0, pfB, 0
++                        dcbt    0, pfB
+ 	vmaddfp	vC22, va2, vb2, vC22
+                         addi    pfB, pfB, 64
+ 	vmaddfp	vC32, va3, vb2, vC32
+@@ -5355,7 +5355,7 @@ MLOOPU:
+    #endif
+ 	vmaddfp	vC01, vA0, vB1, vC01
+    #ifdef BETAX
+-	dcbt	0, pBETA, 0
++	dcbt	0, pBETA
+    #endif
+ 	vmaddfp	vC11, vA1, vB1, vC11
+ 	vmaddfp	vC21, vA2, vB1, vC21
+@@ -6397,7 +6397,7 @@ MPEELEDU:
+       #endif
+ 	vmaddfp	vC01, vA0, vB1, vC33
+ 	vmaddfp	vC11, vA1, vB1, vC33
+-                        dcbt    0, pfA, 0
++                        dcbt    0, pfA
+ 	vmaddfp	vC21, vA2, vB1, vC33
+                         addi    pfA, pfA, 64
+ 	vmaddfp	vC31, vA3, vB1, vC33
+@@ -6784,7 +6784,7 @@ MPEELEDU:
+    #endif
+ 	vmaddfp	vC02, va0, vb2, vC02
+ 	vmaddfp	vC12, va1, vb2, vC12
+-                        dcbt    0, pfB, 0
++                        dcbt    0, pfB
+ 	vmaddfp	vC22, va2, vb2, vC22
+                         addi    pfB, pfB, 64
+ 	vmaddfp	vC32, va3, vb2, vC32
