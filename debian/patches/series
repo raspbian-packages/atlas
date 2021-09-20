@@ -1,0 +1,11 @@
+rename-lapack-atlas.patch
+mips.patch
+kfreebsd.patch
+generic.patch
+ppc64el-abiv2.patch
+ppc64el-ifdef-files-with-lvx.patch
+powerpc-dcbt.patch
+fix-typos.patch
+missing-cflags.patch
+ppc64-endianness.patch
+gfortran-10.patch
