@@ -405,8 +405,15 @@ Mjoin(_,ATL_USERMM):
  */
 #ifdef ATL_GAS_LINUX_PPC
    #ifdef ATL_USE64BITS
+      #if _CALL_ELF == 2
+      /* ABIv2 */
+        ld      pC0, 104(r1)
+        ld      incCn, 112(r1)
+      #else
+      /* ABIv1 */
 	ld 	pC0, 120(r1)
 	ld 	incCn, 128(r1)
+      #endif
    #else
 	lwz	incCn, FSIZE+8(r1)
    #endif
