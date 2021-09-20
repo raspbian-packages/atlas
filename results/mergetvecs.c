@@ -41,7 +41,7 @@ char **GetFlags         /* RETURNS: array of names to combine */
    for (i=1; i < nargs; i++)
    {
       if (args[i][0] != '-')
-         PrintUsage(args[0], "no '-' preceeding flag!", i);
+         PrintUsage(args[0], "no '-' preceding flag!", i);
       switch(args[i][1])
       {
       case 'i':    /* -i[1,2] <file> */

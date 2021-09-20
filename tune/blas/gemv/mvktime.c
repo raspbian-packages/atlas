@@ -584,7 +584,7 @@ void GetFlags(int nargs, char **args, int *verb,
    for (i=1; i < nargs; i++)
    {
       if (args[i][0] != '-')
-         PrintUsage(args[0], "No '-' preceeding flag!", i);
+         PrintUsage(args[0], "No '-' preceding flag!", i);
       switch(args[i][1])
       {
       case 'f' :  /* set resfile output */
