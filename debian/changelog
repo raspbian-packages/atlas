@@ -1,4 +1,4 @@
-atlas (3.10.3-10+rpi1) bullseye-staging; urgency=medium
+atlas (3.10.3-11+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,16 @@ atlas (3.10.3-10+rpi1) bullseye-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Peter Michael Green <plugwash@raspbian.org>  Thu, 28 May 2020 16:27:37 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Tue, 28 Sep 2021 21:15:47 +0000
+
+atlas (3.10.3-11) unstable; urgency=medium
+
+  * Rebuild against lapack 3.10.0
+  * Move some B-D to Build-Depends-Arch
+  * Bump S-V to 4.6.0
+  * Add d/upstream/metadata
+
+ -- Sébastien Villemot <sebastien@debian.org>  Mon, 20 Sep 2021 18:02:49 +0200
 
 atlas (3.10.3-10) unstable; urgency=medium
 
