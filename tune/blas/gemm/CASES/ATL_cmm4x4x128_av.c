@@ -350,7 +350,7 @@ MLOOPU:
       #endif
 	vmaddfp	vC01, vA0, vB1, vC33
 	vmaddfp	vC11, vA1, vB1, vC33
-                        dcbt    0, pfA, 0
+                        dcbt    0, pfA
 	vmaddfp	vC21, vA2, vB1, vC33
                         addi    pfA, pfA, 64
 	vmaddfp	vC31, vA3, vB1, vC33
@@ -737,7 +737,7 @@ MLOOPU:
    #endif
 	vmaddfp	vC02, va0, vb2, vC02
 	vmaddfp	vC12, va1, vb2, vC12
-                        dcbt    0, pfB, 0
+                        dcbt    0, pfB
 	vmaddfp	vC22, va2, vb2, vC22
                         addi    pfB, pfB, 64
 	vmaddfp	vC32, va3, vb2, vC32
@@ -2337,7 +2337,7 @@ MPEELEDU:
       #endif
 	vmaddfp	vC01, vA0, vB1, vC33
 	vmaddfp	vC11, vA1, vB1, vC33
-                        dcbt    0, pfA, 0
+                        dcbt    0, pfA
 	vmaddfp	vC21, vA2, vB1, vC33
                         addi    pfA, pfA, 64
 	vmaddfp	vC31, vA3, vB1, vC33
@@ -2724,7 +2724,7 @@ MPEELEDU:
    #endif
 	vmaddfp	vC02, va0, vb2, vC02
 	vmaddfp	vC12, va1, vb2, vC12
-                        dcbt    0, pfB, 0
+                        dcbt    0, pfB
 	vmaddfp	vC22, va2, vb2, vC22
                         addi    pfB, pfB, 64
 	vmaddfp	vC32, va3, vb2, vC32
