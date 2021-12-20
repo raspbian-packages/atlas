@@ -1,0 +1,12 @@
+usr/include/
+usr/lib/*/*.a
+debian/blas-atlas.pc /usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/
+debian/lapack-atlas.pc /usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/
+libblas.a          /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+libblas.so         /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+liblapack.a        /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+liblapack.so       /usr/lib/${DEB_HOST_MULTIARCH}/atlas/
+libatlas.so        /usr/lib/${DEB_HOST_MULTIARCH}/
+lib*cblas.so       /usr/lib/${DEB_HOST_MULTIARCH}/
+lib*f77blas.so     /usr/lib/${DEB_HOST_MULTIARCH}/
+liblapack_atlas.so /usr/lib/${DEB_HOST_MULTIARCH}/
