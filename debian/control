@@ -6,7 +6,7 @@ Priority: optional
 Build-Depends: debhelper-compat (= 13),
                debhelper (>= 12.8~)
 Build-Depends-Arch: gfortran,
-                    liblapack-dev (>= 3.8.0-6~)
+                    liblapack-dev (>= 3.10.0-2~)
 Build-Depends-Indep: texlive-latex-base,
                      ghostscript
 Standards-Version: 4.6.0
