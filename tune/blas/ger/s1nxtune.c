@@ -299,7 +299,7 @@ int GetFlags(int nargs, char **args, enum ATLAS_UPLO *Uplo, int *verb,
    for (i=1; i < nargs; i++)
    {
       if (args[i][0] != '-')
-         PrintUsage(args[0], i, "No '-' preceeding flag!");
+         PrintUsage(args[0], i, "No '-' preceding flag!");
       switch(args[i][1])
       {
       case 's' :
