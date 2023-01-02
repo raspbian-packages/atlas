@@ -1,4 +1,4 @@
-atlas (3.10.3-12+rpi1) bookworm-staging; urgency=medium
+atlas (3.10.3-13+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 3.10.2-6+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Wed, 07 Jan 2015 01:41:03 +0000]
   * Use generic build for raspbian.
@@ -6,7 +6,14 @@ atlas (3.10.3-12+rpi1) bookworm-staging; urgency=medium
   * Build some stuff for libatlas-test manually as it doesn't seem to get built
     if the testsuite fails.
 
- -- Raspbian forward porter <root@raspbian.org>  Mon, 27 Dec 2021 10:10:11 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Mon, 02 Jan 2023 06:42:40 +0000
+
+atlas (3.10.3-13) unstable; urgency=medium
+
+  * Rebuild against lapack ⩾ 3.11.0
+  * d/control: remove Breaks on libopenblas-base, which has been removed
+
+ -- Sébastien Villemot <sebastien@debian.org>  Wed, 30 Nov 2022 09:44:31 +0100
 
 atlas (3.10.3-12) unstable; urgency=medium
 

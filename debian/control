@@ -23,7 +23,6 @@ Depends: ${shlibs:Depends},
          ${misc:Depends}
 Breaks: libblas3 (<< 3.7.1-2~),
         liblapack3 (<< 3.7.1-2~),
-        libopenblas-base (<< 0.2.20+ds-3~),
         libatlas-base-dev (<< 3.10.3-4~)
 Conflicts: libcblas3
 Provides: libblas.so.3,
