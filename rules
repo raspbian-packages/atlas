@@ -1,0 +1,240 @@
+#!/usr/bin/make -f
+
+# Some ATLAS code uses improper format strings, so disable this
+export DEB_BUILD_MAINT_OPTIONS=hardening=-format
+
+include /usr/share/dpkg/default.mk
+
+# Parallel make variable, used by ATLAS build system
+PMAKE := make
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+PMAKE += -j $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+endif
+
+GFORTRAN_LIB_PATH := $(shell $(CC) -print-search-dirs | grep ^install: | awk '{print $$2}')
+
+# Flags common to both the generic and custom packages
+CONFIGURE_FLAGS := --prefix="$(CURDIR)/debian/tmp"			 	\
+	--incdir="$(CURDIR)/debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/"	\
+	--libdir="$(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/"		\
+	--shared								\
+	-D c -DWALL 								\
+	-Ss f77lib "-L$(GFORTRAN_LIB_PATH) -lgfortran -lgcc_s -lpthread"	\
+	-Ss pmake '$(PMAKE)'							\
+	-v 2
+
+ifeq (,$(filter custom,$(DEB_BUILD_OPTIONS)))
+# Building the generic package, so enforce more configuration settings to make
+# the package independent of the build host hardware.
+
+# In particular, force the MACHTYPE and ISA.
+# The following strings and numbers come from xprint_enums (compilable
+# with "make -C build xprint_enums").
+# N.B.: They can change across releases!
+
+ifeq (yes,$(shell dpkg-vendor --derives-from Ubuntu && echo yes))
+UBUNTU := yes
+endif
+
+# Select the machine type
+ifeq ($(DEB_HOST_ARCH),s390x)
+MACHTYPE := $(if $(UBUNTU),IBMz12,IBMz9)
+else ifeq ($(DEB_HOST_ARCH_CPU),ppc64el)
+MACHTYPE := POWER8
+else ifeq ($(DEB_HOST_ARCH_CPU),i386)
+# See http://math-atlas.sourceforge.net/atlas_install/node32.html
+MACHTYPE := x86x87
+else ifeq ($(DEB_HOST_ARCH_CPU),amd64)
+MACHTYPE := x86SSE2
+else ifeq ($(DEB_HOST_ARCH),ia64)
+MACHTYPE := IA64Itan
+else
+# The same as UNKNOWN, except that it does not try autodetection
+# See debian/patches/generic.diff
+MACHTYPE := GENERIC
+endif
+
+# ISA corresponds to the instruction set architecture:
+# - 1 means no instruction set extension
+# - 768 means SSE1+SSE2 (always available on amd64)
+# - 16384 means FPV3D16MAC (always available on armhf)
+# VSX should also be enabled on ppc64el, but as of 3.10.3-2 it FTBFS.
+ifeq ($(DEB_HOST_ARCH_CPU),amd64)
+ISA := 768
+else ifeq ($(DEB_HOST_ARCH),armhf)
+ISA := 16384
+else
+ISA := 1
+endif
+
+# - the cripple-atlas-performance flag is needed for disabling the CPU
+#   throttling check, because on some buildds CPU throttling is enabled and we
+#   have no way of disabling it;
+# - disable multi-threading (-t 0), because otherwise the package FTBFS on some
+#   single-processor machines;
+# - enforce gcc as the compiler for all uses (except for compiling probes,
+#   in --cc), because otherwise architectural defaults do not work.
+CONFIGURE_FLAGS +=	 					\
+	-b $(DEB_HOST_ARCH_BITS)				\
+	-A $(MACHTYPE) 						\
+	-V $(ISA) 						\
+	-t 0 							\
+	--cc="$(CC)" 						\
+	--cflags="$(CPPFLAGS) $(CFLAGS)"			\
+	-C acg gcc						\
+	-F acg "$(CPPFLAGS) $(CFLAGS)"				\
+	-C if gfortran						\
+	-F if "$(FFLAGS)"					\
+	-Ss ADdir ../../debian/archdefs/$(DEB_HOST_ARCH_CPU)	\
+	--cripple-atlas-performance
+
+else
+# Flags specific to the custom package
+
+# Uncomment the following if the ATLAS build system still complains after you
+# have set all the CPU governors to "performance"
+#CONFIGURE_FLAGS += --cripple-atlas-performance
+endif
+
+
+GENERATED_DEBIAN_FILES := $(patsubst %.in,%,$(wildcard debian/*.pc.in debian/*.postinst.in debian/*.prerm.in))
+
+$(GENERATED_DEBIAN_FILES): %: %.in
+	sed -e "s/@DEB_VERSION_UPSTREAM@/$(DEB_VERSION_UPSTREAM)/g" \
+	    -e "s/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g" < $< > $@
+
+
+%:
+	dh $@
+
+override_dh_auto_configure-arch: $(GENERATED_DEBIAN_FILES)
+	mkdir -p build/
+	cd build && ../configure $(CONFIGURE_FLAGS)
+	@echo "=============================================="
+	@echo -n "Configured arch: "
+	@grep ARCH < build/Make.inc | head -1 | awk '{print $$3}'
+	@echo "=============================================="
+
+override_dh_auto_configure-indep:
+
+override_dh_auto_build-arch:
+	make -C build
+
+	# We do not ship the lib{s,t}atlas.so created by ATLAS build system, they have an awkward name and an incorrect SONAME
+	# Rather create our shared versions of individual ATLAS libraries
+	gfortran $(LDFLAGS) -shared -Wl,-soname=libatlas.so.3 -o libatlas.so.$(DEB_VERSION_UPSTREAM) \
+		-Wl,--whole-archive build/lib/libatlas.a -Wl,--no-whole-archive \
+		$$(test -f build/lib/libptcblas.a && echo -lpthread) -lc -lm
+	ln -sf libatlas.so.$(DEB_VERSION_UPSTREAM) libatlas.so.3
+	ln -sf libatlas.so.$(DEB_VERSION_UPSTREAM) libatlas.so
+
+	gfortran $(LDFLAGS) -shared -Wl,-soname=libcblas.so.3 -o libcblas.so.$(DEB_VERSION_UPSTREAM) \
+		-Wl,--whole-archive build/lib/libcblas.a -Wl,--no-whole-archive \
+		-L. -latlas -lm -lc
+	ln -sf libcblas.so.$(DEB_VERSION_UPSTREAM) libcblas.so.3
+	ln -sf libcblas.so.$(DEB_VERSION_UPSTREAM) libcblas.so
+
+	gfortran $(LDFLAGS) -shared -Wl,-soname=libf77blas.so.3 -o libf77blas.so.$(DEB_VERSION_UPSTREAM) \
+		-Wl,--whole-archive build/lib/libf77blas.a -Wl,--no-whole-archive \
+		-L. -lcblas -latlas -lm -lc
+	ln -sf libf77blas.so.$(DEB_VERSION_UPSTREAM) libf77blas.so.3
+	ln -sf libf77blas.so.$(DEB_VERSION_UPSTREAM) libf77blas.so
+
+	gfortran $(LDFLAGS) -shared -Wl,-soname=liblapack_atlas.so.3 -o liblapack_atlas.so.$(DEB_VERSION_UPSTREAM) \
+		-Wl,--whole-archive build/lib/liblapack_atlas.a -Wl,--no-whole-archive \
+		-L. -lf77blas -lcblas -latlas -lm -lc
+	ln -sf liblapack_atlas.so.$(DEB_VERSION_UPSTREAM) liblapack_atlas.so.3
+	ln -sf liblapack_atlas.so.$(DEB_VERSION_UPSTREAM) liblapack_atlas.so
+
+	if test -f build/lib/libptcblas.a; then \
+		gfortran $(LDFLAGS) -shared -Wl,-soname=libptcblas.so.3 \
+			-o libptcblas.so.$(DEB_VERSION_UPSTREAM) \
+			-Wl,--whole-archive build/lib/libptcblas.a -Wl,--no-whole-archive \
+			-L. -latlas -lm -lc; \
+		ln -sf libptcblas.so.$(DEB_VERSION_UPSTREAM) libptcblas.so.3; \
+		ln -sf libptcblas.so.$(DEB_VERSION_UPSTREAM) libptcblas.so; \
+	fi
+
+	if test -f build/lib/libptf77blas.a; then \
+		gfortran $(LDFLAGS) -shared -Wl,-soname=libptf77blas.so.3 \
+			-o libptf77blas.so.$(DEB_VERSION_UPSTREAM) \
+			-Wl,--whole-archive build/lib/libptf77blas.a -Wl,--no-whole-archive \
+			-L. -lptcblas -latlas -lm -lc; \
+		ln -sf libptf77blas.so.$(DEB_VERSION_UPSTREAM) libptf77blas.so.3; \
+		ln -sf libptf77blas.so.$(DEB_VERSION_UPSTREAM) libptf77blas.so; \
+	fi
+
+	# Create static and shared full BLAS
+	mkdir tmp
+	cd tmp && \
+		if test -f ../build/lib/libptf77blas.a -a -f ../build/lib/libptcblas.a; then \
+			ar x ../build/lib/libptf77blas.a && \
+			ar x ../build/lib/libptcblas.a; \
+		else \
+			ar x ../build/lib/libf77blas.a && \
+			ar x ../build/lib/libcblas.a; \
+		fi
+	ar r libblas.a tmp/*.o
+	rm -rf tmp
+	gfortran $(LDFLAGS) -shared -Wl,-soname=libblas.so.3 -o libblas.so.$(DEB_VERSION_UPSTREAM) \
+		-Wl,--whole-archive libblas.a -Wl,--no-whole-archive \
+		-L. -latlas $$(test -f build/lib/libptcblas.a && echo -lpthread) -lm -lc
+	ln -sf libblas.so.$(DEB_VERSION_UPSTREAM) libblas.so.3
+	ln -sf libblas.so.$(DEB_VERSION_UPSTREAM) libblas.so
+
+	# Kludge to fix blas-atlas.pc by adding -lpthread when needed
+	if test -f build/lib/libptcblas.a; then sed -i 's/^Libs.private: \(.*\)/Libs.private: \1 -lpthread/' debian/blas-atlas.pc; fi
+
+	# Create static and shared full LAPACK
+	# Note that we unpack liblapack_atlas.a after liblapack_pic.a, in order to overwrite routines in the latter
+	mkdir tmp
+	cd tmp && \
+		ar x /usr/lib/$(DEB_HOST_MULTIARCH)/liblapack_pic.a && \
+		ar x ../build/lib/liblapack_atlas.a
+	ar r liblapack.a tmp/*.o
+	rm -rf tmp
+	gfortran $(LDFLAGS) -shared -Wl,-soname=liblapack.so.3 -o liblapack.so.$(DEB_VERSION_UPSTREAM) \
+		-Wl,--whole-archive liblapack.a -Wl,--no-whole-archive \
+		-L. -lblas -latlas -lm -lc
+	ln -sf liblapack.so.$(DEB_VERSION_UPSTREAM) liblapack.so.3
+	ln -sf liblapack.so.$(DEB_VERSION_UPSTREAM) liblapack.so
+
+override_dh_auto_build-indep:
+	# Build PDF documentation
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+	make -C TexDoc atlas_contrib.pdf atlas_devel.pdf atlas_install.pdf cblasqref.pdf f77blasqref.pdf lapackqref.pdf
+endif
+
+override_dh_auto_test-arch:
+	make -C build check
+	if test -f build/lib/libptcblas.a; then make -C build ptcheck; fi
+
+override_dh_auto_install-arch:
+	make -C build install # The build system does not support setting DESTDIR at install time
+	mv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas.h debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/cblas-atlas.h
+
+override_dh_installdocs-indep:
+	dh_installdocs -plibatlas-doc --doc-main-package=libatlas-base-dev
+
+# We want packages using libblas/liblapack to depend on any BLAS/LAPACK
+# alternative, and we want packages depending on ATLAS-specific libraries
+# (e.g. libatlas.so) to depend specifically on libatlas3-base.
+#
+# Such a setting is not supported by dh_makeshlibs, so we ship a hand-crafted
+# shlibs file.
+execute_after_dh_makeshlibs-arch:
+	cp debian/libatlas3-base.shlibs debian/libatlas3-base/DEBIAN/shlibs
+	if test -f libptcblas.so; then echo "libptcblas 3 libatlas3-base" >> debian/libatlas3-base/DEBIAN/shlibs; fi
+	if test -f libptf77blas.so; then echo "libptf77blas 3 libatlas3-base" >> debian/libatlas3-base/DEBIAN/shlibs; fi
+
+override_dh_shlibdeps-arch:
+	dh_shlibdeps -a -l $$(pwd)
+
+override_dh_auto_clean:
+	rm -rf build
+	rm -f TexDoc/*.pdf
+	rm -f debian/blas-atlas.pc debian/lapack-atlas.pc
+	rm -f *.a *.so *.so.*
+
+execute_after_dh_clean:
+	rm -f $(GENERATED_DEBIAN_FILES)
