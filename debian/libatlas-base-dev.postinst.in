@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+update-alternatives --install /usr/lib/@DEB_HOST_MULTIARCH@/libblas.so libblas.so-@DEB_HOST_MULTIARCH@ \
+                    /usr/lib/@DEB_HOST_MULTIARCH@/atlas/libblas.so 35 \
+                    --slave /usr/lib/@DEB_HOST_MULTIARCH@/libblas.a libblas.a-@DEB_HOST_MULTIARCH@ \
+                    /usr/lib/@DEB_HOST_MULTIARCH@/atlas/libblas.a \
+                    --slave /usr/include/@DEB_HOST_MULTIARCH@/cblas.h cblas.h-@DEB_HOST_MULTIARCH@ \
+                    /usr/include/@DEB_HOST_MULTIARCH@/cblas-atlas.h \
+                    --slave /usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/blas.pc \
+                    blas.pc-@DEB_HOST_MULTIARCH@ /usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/blas-atlas.pc
+
+update-alternatives --install /usr/lib/@DEB_HOST_MULTIARCH@/liblapack.so \
+                    liblapack.so-@DEB_HOST_MULTIARCH@ \
+                    /usr/lib/@DEB_HOST_MULTIARCH@/atlas/liblapack.so 35 \
+                    --slave /usr/lib/@DEB_HOST_MULTIARCH@/liblapack.a liblapack.a-@DEB_HOST_MULTIARCH@ \
+                    /usr/lib/@DEB_HOST_MULTIARCH@/atlas/liblapack.a \
+                    --slave /usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/lapack.pc \
+                    lapack.pc-@DEB_HOST_MULTIARCH@ \
+                    /usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/lapack-atlas.pc
+
+#DEBHELPER#
+
+exit 0
